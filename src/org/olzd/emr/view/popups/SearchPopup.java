@@ -2,6 +2,8 @@ package org.olzd.emr.view.popups;
 
 import org.olzd.emr.action.OpenMedicalCardAction;
 import org.olzd.emr.action.SearchMedicalCardAction;
+import org.olzd.emr.model.SearchByNameModel;
+import org.olzd.emr.model.SearchResult;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +15,8 @@ public class SearchPopup extends JDialog {
     private JTextField surnameField = new JTextField(15);
     private JButton startSearchButton = new JButton();
     private JButton openMedicalCardButton = new JButton();
-    private JList searchResultsList = new JList();
+    private JList<SearchResult> searchResultsList = new JList<SearchResult>();
+    private DefaultListModel<SearchResult> searchResultsModel = new DefaultListModel<SearchResult>();
 
     public SearchPopup(Frame owner, String title, boolean modal) {
         super(owner, title, modal);
@@ -74,13 +77,17 @@ public class SearchPopup extends JDialog {
 
     private void tuneFoundCardsList() {
         searchResultsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        searchResultsList.setModel(searchResultsModel);
     }
 
-    public String getNameValue() {
-        return nameField.getText();
+    public SearchByNameModel getSearchByNameModel() {
+        SearchByNameModel model = new SearchByNameModel();
+        model.setName(nameField.getText());
+        model.setSurname(surnameField.getText());
+        return model;
     }
 
-    public String getSurnameValue() {
-        return surnameField.getText();
+    public DefaultListModel<SearchResult> getSearchResultsModel() {
+        return searchResultsModel;
     }
 }
