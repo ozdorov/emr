@@ -8,7 +8,6 @@ import org.olzd.emr.view.popups.SearchPopup;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,16 +31,10 @@ public class SearchMedicalCardAction extends AbstractAction {
         MedicalCardService cardService = new MedicalCardService();
         List<MedicalCard> res = cardService.findMedicalCardByName(searchByNameModel);
 
-        List<SearchResult> resForUI = new ArrayList<SearchResult>(res.size());
-        for (MedicalCard card : res) {
-            SearchResult searchResult = new SearchResult(card);
-            resForUI.add(searchResult);
-        }
-
         DefaultListModel<SearchResult> listModel = searchPopup.getSearchResultsModel();
-        int i = 0;
-        for (SearchResult elem : resForUI) {
-            listModel.add(i++, elem);
+        int counter = 0;
+        for (MedicalCard card : res) {
+            listModel.add(counter++, SearchResult.createSearchResultFromCard(card));
         }
     }
 }

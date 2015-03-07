@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MedicalCardService {
+
     public List<MedicalCard> findMedicalCardByName(SearchByNameModel searchByName) {
         MedicalCard cardA = new MedicalCard();
         cardA.setName("aa");
@@ -17,6 +18,10 @@ public class MedicalCardService {
         cardB.setSurname("BBB");
 
         return Arrays.asList(cardA, cardB);
+    }
+
+    public void saveMedicalCard(MedicalCard card) {
+
     }
 
 }

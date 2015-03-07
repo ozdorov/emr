@@ -1,14 +1,12 @@
 package org.olzd.emr.view.popups;
 
-import org.olzd.emr.action.OpenMedicalCardAction;
 import org.olzd.emr.action.SearchMedicalCardAction;
+import org.olzd.emr.action.ShowMedicalCardAction;
 import org.olzd.emr.model.SearchByNameModel;
 import org.olzd.emr.model.SearchResult;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class SearchPopup extends JDialog {
     private JTextField nameField = new JTextField(15);
@@ -70,7 +68,7 @@ public class SearchPopup extends JDialog {
     }
 
     private void tuneOpenCardButton() {
-        OpenMedicalCardAction action = new OpenMedicalCardAction();
+        ShowMedicalCardAction action = new ShowMedicalCardAction();
         action.putValue(Action.NAME, "Открыть");
         openMedicalCardButton.setAction(action);
     }

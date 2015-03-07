@@ -19,4 +19,8 @@ public class SearchResult {
     public String toString() {
         return new StringBuilder(medicalCard.getSurname()).append(',').append(medicalCard.getName()).toString();
     }
+
+    public static SearchResult createSearchResultFromCard(MedicalCard card) {
+        return new SearchResult(card);
+    }
 }
