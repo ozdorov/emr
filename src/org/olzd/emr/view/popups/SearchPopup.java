@@ -68,7 +68,7 @@ public class SearchPopup extends JDialog {
     }
 
     private void tuneOpenCardButton() {
-        ShowMedicalCardAction action = new ShowMedicalCardAction();
+        ShowMedicalCardAction action = new ShowMedicalCardAction(this);
         action.putValue(Action.NAME, "Открыть");
         openMedicalCardButton.setAction(action);
     }
@@ -87,5 +87,9 @@ public class SearchPopup extends JDialog {
 
     public DefaultListModel<SearchResult> getSearchResultsModel() {
         return searchResultsModel;
+    }
+
+    public JList<SearchResult> getSearchResultsList() {
+        return searchResultsList;
     }
 }

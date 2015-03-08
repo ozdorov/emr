@@ -2,15 +2,19 @@ package org.olzd.emr.view;
 
 import org.olzd.emr.UIHelper;
 import org.olzd.emr.action.SaveMedicalCardAction;
+import org.olzd.emr.entity.MedicalCard;
 
 import javax.swing.*;
 import javax.swing.text.DateFormatter;
+import javax.swing.text.DefaultFormatterFactory;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class EditMedicalCardPanel extends JPanel {
 
     private JTextField name = new JTextField(15);
     private JTextField surname = new JTextField(15);
-    private JFormattedTextField birthday = new JFormattedTextField(new DateFormatter());
+    private JFormattedTextField birthday = new JFormattedTextField();
     private JButton saveButton = new JButton();
 
     public EditMedicalCardPanel() {
@@ -22,9 +26,12 @@ public class EditMedicalCardPanel extends JPanel {
     }
 
     private void constructPanelLogic() {
-        SaveMedicalCardAction saveCardAction = new SaveMedicalCardAction();
+        SaveMedicalCardAction saveCardAction = new SaveMedicalCardAction(this);
         saveCardAction.putValue(Action.NAME, "Сохранить");
         saveButton.setAction(saveCardAction);
+
+        DateFormatter df = new DateFormatter(new SimpleDateFormat("MM/dd/YYYY"));
+        birthday.setFormatterFactory(new DefaultFormatterFactory(df));
     }
 
     private void constructPanelView(GroupLayout layout) {
@@ -58,7 +65,24 @@ public class EditMedicalCardPanel extends JPanel {
         layout.linkSize(SwingConstants.HORIZONTAL, nameLabel, surnameLabel, birthdayLabel);
     }
 
-    public void injectMedicalCardModel() {
+    public void injectMedicalCardModel(MedicalCard card) {
+        name.setText(card.getName());
+        surname.setText(card.getSurname());
+        if (card.getDateOfBirth() != null) {
+            birthday.setText(new SimpleDateFormat("MM/dd/YYYY").format(card.getDateOfBirth()));
+        }
+    }
+
+    public String getNameValue() {
+        return name.getText();
+    }
+
+    public String getSurnameValue() {
+        return surname.getText();
+    }
+
+    public Date getDateValue() {
+        return (Date) birthday.getValue();
     }
 
 }

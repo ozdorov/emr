@@ -6,6 +6,7 @@ public class MedicalCard {
     private String name;
     private String surname;
     private Date dateOfBirth;
+    private boolean wasModified;
 
     public String getName() {
         return name;
@@ -13,6 +14,7 @@ public class MedicalCard {
 
     public void setName(String name) {
         this.name = name;
+        wasModified = true;
     }
 
     public String getSurname() {
@@ -21,6 +23,7 @@ public class MedicalCard {
 
     public void setSurname(String surname) {
         this.surname = surname;
+        wasModified = true;
     }
 
     public Date getDateOfBirth() {
@@ -29,5 +32,11 @@ public class MedicalCard {
 
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+        wasModified = true;
+    }
+
+    //todo ask if user wants to close card without saving
+    public boolean wasModified() {
+        return wasModified;
     }
 }

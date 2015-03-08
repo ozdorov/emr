@@ -13,6 +13,7 @@ public class MainWindow extends JFrame {
     private JSplitPane splitPane = new JSplitPane();
     private JTree cardStructureTree = new JTree();
     private JPanel emptyPanel = new JPanel();
+    private EditMedicalCardPanel medicalCardPanel;
 
     public MainWindow() {
         constructView();
@@ -62,5 +63,22 @@ public class MainWindow extends JFrame {
 
     public JSplitPane getSplitPane() {
         return splitPane;
+    }
+
+    public void showMedicalCardPanel(boolean show) {
+        if (show) {
+            splitPane.setRightComponent(getMedicalCardPanel());
+        } else {
+            splitPane.setRightComponent(emptyPanel);
+        }
+
+        splitPane.repaint();
+    }
+
+    public EditMedicalCardPanel getMedicalCardPanel() {
+        if (medicalCardPanel == null) {
+            medicalCardPanel = new EditMedicalCardPanel();
+        }
+        return medicalCardPanel;
     }
 }
