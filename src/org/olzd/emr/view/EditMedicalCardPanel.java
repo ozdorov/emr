@@ -16,10 +16,12 @@ public class EditMedicalCardPanel extends JPanel {
     private JTextField surname = new JTextField(15);
     private JFormattedTextField birthday = new JFormattedTextField();
     private JButton saveButton = new JButton();
+    private final MainWindow parentFrame;
 
-    public EditMedicalCardPanel() {
+    public EditMedicalCardPanel(MainWindow window) {
         GroupLayout layoutManager = new GroupLayout(this);
         setLayout(layoutManager);
+        parentFrame = window;
 
         constructPanelView(layoutManager);
         constructPanelLogic();
@@ -30,7 +32,7 @@ public class EditMedicalCardPanel extends JPanel {
         saveCardAction.putValue(Action.NAME, "Сохранить");
         saveButton.setAction(saveCardAction);
 
-        DateFormatter df = new DateFormatter(new SimpleDateFormat("MM/dd/YYYY"));
+        DateFormatter df = new DateFormatter(new SimpleDateFormat("MM/dd/yyyy"));
         birthday.setFormatterFactory(new DefaultFormatterFactory(df));
     }
 
@@ -83,6 +85,10 @@ public class EditMedicalCardPanel extends JPanel {
 
     public Date getDateValue() {
         return (Date) birthday.getValue();
+    }
+
+    public MainWindow getParentFrame() {
+        return parentFrame;
     }
 
 }

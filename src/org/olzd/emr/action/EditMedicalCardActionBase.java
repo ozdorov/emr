@@ -5,10 +5,10 @@ import org.olzd.emr.view.MainWindow;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class PrepareEditMedicalCardAction extends AbstractAction {
+public class EditMedicalCardActionBase extends AbstractAction {
     private MainWindow mainWindow;
 
-    public PrepareEditMedicalCardAction(MainWindow mainWindow) {
+    public EditMedicalCardActionBase(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
     }
 

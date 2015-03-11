@@ -3,6 +3,7 @@ package org.olzd.emr.entity;
 import java.util.Date;
 
 public class MedicalCard {
+    private Integer cardId;
     private String name;
     private String surname;
     private Date dateOfBirth;
@@ -38,5 +39,13 @@ public class MedicalCard {
     //todo ask if user wants to close card without saving
     public boolean wasModified() {
         return wasModified;
+    }
+
+    public Integer getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(Integer cardId) {
+        this.cardId = cardId;
     }
 }
