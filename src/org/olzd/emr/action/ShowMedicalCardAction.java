@@ -1,5 +1,6 @@
 package org.olzd.emr.action;
 
+import org.olzd.emr.model.MedicalCardModel;
 import org.olzd.emr.model.SearchResult;
 import org.olzd.emr.view.EditMedicalCardPanel;
 import org.olzd.emr.view.MainWindow;
@@ -26,10 +27,12 @@ public class ShowMedicalCardAction extends AbstractAction {
 
         MainWindow mainWindow = (MainWindow) searchPopup.getOwner();
         EditMedicalCardPanel medicalCardPanel = mainWindow.getMedicalCardPanel();
-        medicalCardPanel.injectMedicalCardModel(selectedCard.getMedicalCard());
+        MedicalCardModel model = new MedicalCardModel(selectedCard.getMedicalCard());
+        medicalCardPanel.injectMedicalCardModel(model);
 
         mainWindow.showMedicalCardPanel(true);
+        searchPopup.cleanupPopup();
         searchPopup.setVisible(false);
-
     }
+
 }

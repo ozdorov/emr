@@ -7,6 +7,7 @@ public class MedicalCard {
     private String name;
     private String surname;
     private Date dateOfBirth;
+    private String contactPhone;
     private boolean wasModified;
 
     public String getName() {
@@ -45,7 +46,20 @@ public class MedicalCard {
         return cardId;
     }
 
+    public boolean isExisting() {
+        return cardId != null;
+    }
+
     public void setCardId(Integer cardId) {
         this.cardId = cardId;
     }
+
+    public String getContactPhone() {
+        return contactPhone;
+    }
+
+    public void setContactPhone(String contactPhone) {
+        this.contactPhone = contactPhone;
+    }
+
 }

@@ -1,5 +1,6 @@
 package org.olzd.emr.action;
 
+import org.olzd.emr.model.MedicalCardModel;
 import org.olzd.emr.view.MainWindow;
 
 import javax.swing.*;
@@ -14,6 +15,9 @@ public class EditMedicalCardActionBase extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        MedicalCardModel model = new MedicalCardModel();
+        mainWindow.getMedicalCardPanel().injectMedicalCardModel(model);
+
         mainWindow.showMedicalCardPanel(true);
     }
 }

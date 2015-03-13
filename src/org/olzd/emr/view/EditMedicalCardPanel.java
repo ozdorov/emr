@@ -1,22 +1,27 @@
 package org.olzd.emr.view;
 
 import org.olzd.emr.UIHelper;
+import org.olzd.emr.action.CardTreeRefresher;
 import org.olzd.emr.action.SaveMedicalCardAction;
-import org.olzd.emr.entity.MedicalCard;
+import org.olzd.emr.model.MedicalCardModel;
 
 import javax.swing.*;
 import javax.swing.text.DateFormatter;
 import javax.swing.text.DefaultFormatterFactory;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class EditMedicalCardPanel extends JPanel {
 
     private JTextField name = new JTextField(15);
     private JTextField surname = new JTextField(15);
     private JFormattedTextField birthday = new JFormattedTextField();
+    private JTextField phoneNumber = new JTextField(15);
     private JButton saveButton = new JButton();
     private final MainWindow parentFrame;
+    private MedicalCardModel model;
+    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public EditMedicalCardPanel(MainWindow window) {
         GroupLayout layoutManager = new GroupLayout(this);
@@ -32,8 +37,9 @@ public class EditMedicalCardPanel extends JPanel {
         saveCardAction.putValue(Action.NAME, "Сохранить");
         saveButton.setAction(saveCardAction);
 
-        DateFormatter df = new DateFormatter(new SimpleDateFormat("MM/dd/yyyy"));
+        DateFormatter df = new DateFormatter(new SimpleDateFormat("dd/MM/yyyy"));
         birthday.setFormatterFactory(new DefaultFormatterFactory(df));
+        addModelPropertyChangeSupport(new CardTreeRefresher(getParentFrame().getCardStructureTree()));
     }
 
     private void constructPanelView(GroupLayout layout) {
@@ -43,6 +49,7 @@ public class EditMedicalCardPanel extends JPanel {
         JLabel nameLabel = new JLabel("Имя");
         JLabel surnameLabel = new JLabel("Фамилия");
         JLabel birthdayLabel = new JLabel("Год рождения");
+        JLabel phoneNumberLabel = new JLabel("Контактный телефон");
 
         birthday.setColumns(10);
 
@@ -55,36 +62,45 @@ public class EditMedicalCardPanel extends JPanel {
         GroupLayout.SequentialGroup birthdayRow = UIHelper.createFixedRowFromParams(layout, birthdayLabel, birthday);
         GroupLayout.ParallelGroup birthColumn = UIHelper.createFixedColumnFromParams(layout, birthdayLabel, birthday);
 
+        GroupLayout.SequentialGroup phoneNumRow = UIHelper.createFixedRowFromParams(layout, phoneNumberLabel, phoneNumber);
+        GroupLayout.ParallelGroup phoneNumColumn = UIHelper.createFixedColumnFromParams(layout, phoneNumberLabel, phoneNumber);
+
         GroupLayout.SequentialGroup saveButtonRow = layout.createSequentialGroup().addComponent(saveButton);
         GroupLayout.ParallelGroup saveButtonColumn = layout.createParallelGroup().addComponent(saveButton);
 
         //todo add gap between text fields and [Save] button
         layout.setHorizontalGroup(layout.createParallelGroup().addGroup(nameRow).addGroup(surnameRow)
-                .addGroup(birthdayRow).addGroup(saveButtonRow));
+                .addGroup(birthdayRow).addGroup(phoneNumRow).addGroup(saveButtonRow));
         layout.setVerticalGroup(layout.createSequentialGroup().addGroup(nameColumn).addGroup(surnameColumn)
-                .addGroup(birthColumn).addGroup(saveButtonColumn));
+                .addGroup(birthColumn).addGroup(phoneNumColumn).addGroup(saveButtonColumn));
 
-        layout.linkSize(SwingConstants.HORIZONTAL, nameLabel, surnameLabel, birthdayLabel);
+        layout.linkSize(SwingConstants.HORIZONTAL, nameLabel, surnameLabel, birthdayLabel, phoneNumberLabel);
     }
 
-    public void injectMedicalCardModel(MedicalCard card) {
-        name.setText(card.getName());
-        surname.setText(card.getSurname());
-        if (card.getDateOfBirth() != null) {
-            birthday.setText(new SimpleDateFormat("MM/dd/YYYY").format(card.getDateOfBirth()));
-        }
+    public void injectMedicalCardModel(MedicalCardModel cardModel) {
+        setModel(cardModel);
+        name.setDocument(cardModel.getNameDoc());
+        surname.setDocument(cardModel.getSurnameDoc());
+        birthday.setDocument(cardModel.getBirthdayDoc());
+        phoneNumber.setDocument(cardModel.getContactPhoneDoc());
     }
 
-    public String getNameValue() {
-        return name.getText();
+    public MedicalCardModel getModel() {
+        return model;
     }
 
-    public String getSurnameValue() {
-        return surname.getText();
+    public void setModel(MedicalCardModel model) {
+        pcs.firePropertyChange("model", this.model, model);
+        this.model = model;
     }
 
-    public Date getDateValue() {
-        return (Date) birthday.getValue();
+    public void addModelPropertyChangeSupport(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener("model", listener);
+    }
+
+    public void refreshCardStructureTree() {
+        //todo remove this hack and refresh tree when saving new Card
+        pcs.firePropertyChange("model", null, this.model);
     }
 
     public MainWindow getParentFrame() {

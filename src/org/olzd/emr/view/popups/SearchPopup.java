@@ -13,8 +13,8 @@ public class SearchPopup extends JDialog {
     private JTextField surnameField = new JTextField(15);
     private JButton startSearchButton = new JButton();
     private JButton openMedicalCardButton = new JButton();
-    private JList<SearchResult> searchResultsList = new JList<SearchResult>();
-    private DefaultListModel<SearchResult> searchResultsModel = new DefaultListModel<SearchResult>();
+    private JList<SearchResult> searchResultsList = new JList<>();
+    private DefaultListModel<SearchResult> searchResultsModel = new DefaultListModel<>();
 
     public SearchPopup(Frame owner, String title, boolean modal) {
         super(owner, title, modal);
@@ -91,5 +91,11 @@ public class SearchPopup extends JDialog {
 
     public JList<SearchResult> getSearchResultsList() {
         return searchResultsList;
+    }
+
+    public void cleanupPopup() {
+        surnameField.setText("");
+        searchResultsModel.clear();
+
     }
 }

@@ -1,15 +1,18 @@
 package org.olzd.emr.view;
 
+import org.olzd.emr.action.AddAnalysisGroupAction;
 import org.olzd.emr.action.EditMedicalCardActionBase;
 import org.olzd.emr.action.ExitFromApplicationAction;
 import org.olzd.emr.action.OpenSearchPopupAction;
+import org.olzd.emr.model.TreeNodeModel;
+import org.olzd.emr.model.TreeNodeType;
 import org.olzd.emr.view.popups.SearchPopup;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeSelectionModel;
+import javax.swing.tree.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MainWindow extends JFrame {
     private SearchPopup searchPopup;
@@ -18,6 +21,7 @@ public class MainWindow extends JFrame {
     private DefaultTreeModel cardStructureTreeModel;
     private JPanel emptyPanel = new JPanel();
     private EditMedicalCardPanel medicalCardPanel;
+    private JPopupMenu treeContextMenu = new JPopupMenu();
 
     public MainWindow() {
         constructLogic();
@@ -35,17 +39,31 @@ public class MainWindow extends JFrame {
     }
 
     private void constructTree() {
-        DefaultMutableTreeNode top = new DefaultMutableTreeNode("Карточка пациента");
-        DefaultMutableTreeNode placeholderForAnalysis = new DefaultMutableTreeNode("Анализы");
-        DefaultMutableTreeNode placeholderForOperations = new DefaultMutableTreeNode("Операции");
+        TreeNodeModel nodeModelTop = new TreeNodeModel("Карточка пациента", TreeNodeType.PLACEHOLDER);
+        TreeNodeModel nodeModelAnalysis = new TreeNodeModel("Анализы", TreeNodeType.PLACEHOLDER);
+        TreeNodeModel nodeModelOperations = new TreeNodeModel("Операции", TreeNodeType.PLACEHOLDER);
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode(nodeModelTop);
+        DefaultMutableTreeNode placeholderForAnalysis = new DefaultMutableTreeNode(nodeModelAnalysis);
+        DefaultMutableTreeNode placeholderForOperations = new DefaultMutableTreeNode(nodeModelOperations);
         top.add(placeholderForAnalysis);
         top.add(placeholderForOperations);
 
         cardStructureTreeModel = new DefaultTreeModel(top);
 
         cardStructureTree = new JTree(cardStructureTreeModel);
+        cardStructureTree.setCellRenderer(new CustomTreeRenderer());
         cardStructureTree.setScrollsOnExpand(true);
         cardStructureTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+        cardStructureTree.addMouseListener(new TreeContextMenuTrigger());
+        cardStructureTree.add(constructTreePopupMenu());
+    }
+
+    private JPopupMenu constructTreePopupMenu() {
+        AddAnalysisGroupAction addAnalysisGroup = new AddAnalysisGroupAction("Добавить группу");
+        treeContextMenu.add(addAnalysisGroup);
+
+        return treeContextMenu;
     }
 
     protected JMenuBar createMenuBar() {
@@ -110,5 +128,44 @@ public class MainWindow extends JFrame {
 
     public JTree getCardStructureTree() {
         return cardStructureTree;
+    }
+
+    private class CustomTreeRenderer extends DefaultTreeCellRenderer {
+        @Override
+        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+            super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+            DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) value;
+            TreeNodeModel nodeModel = (TreeNodeModel) treeNode.getUserObject();
+            if (nodeModel.getNodeType() == TreeNodeType.PLACEHOLDER) {
+                setIcon(getDefaultOpenIcon());
+            }
+
+            return this;
+        }
+    }
+
+    private class TreeContextMenuTrigger extends MouseAdapter {
+        public void mouseReleased(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                int x = e.getX();
+                int y = e.getY();
+                TreePath path = cardStructureTree.getPathForLocation(x, y);
+                if (path != null) {
+                    DefaultMutableTreeNode clickedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+                    TreeNodeModel model = (TreeNodeModel) clickedNode.getUserObject();
+                    if (model.getNodeType() != TreeNodeType.PLACEHOLDER) {
+                        MenuElement[] elements = treeContextMenu.getSubElements();
+                        for (MenuElement elem : elements) {
+                            if (elem instanceof JMenuItem) {
+                                JMenuItem menuItem = (JMenuItem) elem;
+                                menuItem.setEnabled(false);
+                            }
+                        }
+                    }
+
+                    treeContextMenu.show(cardStructureTree, x, y);
+                }
+            }
+        }
     }
 }

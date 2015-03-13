@@ -18,9 +18,11 @@ public class TreeNodeModel {
     public String toString() {
         if (nodeType == TreeNodeType.CARDNODE) {
             MedicalCard card = (MedicalCard) data;
-
             return new StringBuilder(card.getSurname()).append(',').append(card.getName()).toString();
+        } else if (nodeType == TreeNodeType.PLACEHOLDER) {
+            return data.toString();
         }
+
 
         return data.toString();
     }
