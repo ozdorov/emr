@@ -75,6 +75,8 @@ public class EditMedicalCardPanel extends JPanel {
                 .addGroup(birthColumn).addGroup(phoneNumColumn).addGroup(saveButtonColumn));
 
         layout.linkSize(SwingConstants.HORIZONTAL, nameLabel, surnameLabel, birthdayLabel, phoneNumberLabel);
+
+        birthday.setToolTipText("в формате число/месяц/год");
     }
 
     public void injectMedicalCardModel(MedicalCardModel cardModel) {

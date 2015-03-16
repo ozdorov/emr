@@ -2,5 +2,8 @@ package org.olzd.emr.model;
 
 public enum TreeNodeType {
     CARDNODE,
-    PLACEHOLDER,
+    ANALYSIS_PLACEHOLDER,
+    SURGERY_PLACEHOLDER,
+    ANALYSIS_TYPE,
+    ROOT,
 }

@@ -13,6 +13,10 @@ import javax.swing.tree.TreePath;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * This class listens for updates of EditMedicalCardPanel.model.
+ * When model is updated, CardNode is updated too.
+ */
 public class CardTreeRefresher implements PropertyChangeListener {
     private JTree tree;
 

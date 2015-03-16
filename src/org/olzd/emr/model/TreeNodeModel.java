@@ -19,7 +19,7 @@ public class TreeNodeModel {
         if (nodeType == TreeNodeType.CARDNODE) {
             MedicalCard card = (MedicalCard) data;
             return new StringBuilder(card.getSurname()).append(',').append(card.getName()).toString();
-        } else if (nodeType == TreeNodeType.PLACEHOLDER) {
+        } else if (nodeType == TreeNodeType.ANALYSIS_PLACEHOLDER) {
             return data.toString();
         }
 

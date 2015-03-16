@@ -78,8 +78,9 @@ public class MedicalCardService {
         } catch (SQLException e) {
             System.out.println(e);
         }
-
-
     }
 
+    public void saveAnalysisDocLocation() {
+
+    }
 }
