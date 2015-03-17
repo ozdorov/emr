@@ -26,12 +26,12 @@ public class UIHelper {
         if (date == null) {
             return "";
         }
-        return new SimpleDateFormat("MM/dd/YYYY").format(date);
+        return new SimpleDateFormat("dd/MM/yyyy").format(date);
     }
 
     public static Date parseDate(String stringDate) throws ParseException {
         if (stringDate != null && !stringDate.isEmpty()) {
-            return new SimpleDateFormat("MM/dd/YYYY").parse(stringDate);
+            return new SimpleDateFormat("dd/MM/yyyy").parse(stringDate);
         }
         return null;
     }

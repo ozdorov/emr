@@ -6,11 +6,11 @@ import org.olzd.emr.action.SaveMedicalCardAction;
 import org.olzd.emr.model.MedicalCardModel;
 
 import javax.swing.*;
-import javax.swing.text.DateFormatter;
 import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.MaskFormatter;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 public class EditMedicalCardPanel extends JPanel {
 
@@ -37,8 +37,13 @@ public class EditMedicalCardPanel extends JPanel {
         saveCardAction.putValue(Action.NAME, "Сохранить");
         saveButton.setAction(saveCardAction);
 
-        DateFormatter df = new DateFormatter(new SimpleDateFormat("dd/MM/yyyy"));
-        birthday.setFormatterFactory(new DefaultFormatterFactory(df));
+        MaskFormatter maskFormatter = null;
+        try {
+            maskFormatter = new MaskFormatter("##/##/####");
+        } catch (ParseException e) {
+            System.out.println(e);
+        }
+        birthday.setFormatterFactory(new DefaultFormatterFactory(maskFormatter));
         addModelPropertyChangeSupport(new CardTreeRefresher(getParentFrame().getCardStructureTree()));
     }
 
@@ -75,8 +80,6 @@ public class EditMedicalCardPanel extends JPanel {
                 .addGroup(birthColumn).addGroup(phoneNumColumn).addGroup(saveButtonColumn));
 
         layout.linkSize(SwingConstants.HORIZONTAL, nameLabel, surnameLabel, birthdayLabel, phoneNumberLabel);
-
-        birthday.setToolTipText("в формате число/месяц/год");
     }
 
     public void injectMedicalCardModel(MedicalCardModel cardModel) {
