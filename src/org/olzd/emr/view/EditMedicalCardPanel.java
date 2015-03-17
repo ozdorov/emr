@@ -14,10 +14,13 @@ import java.text.ParseException;
 
 public class EditMedicalCardPanel extends JPanel {
 
-    private JTextField name = new JTextField(15);
-    private JTextField surname = new JTextField(15);
+    private JTextField name = new JTextField(16);
+    private JTextField surname = new JTextField(16);
+    private JTextField middleName = new JTextField(16);
     private JFormattedTextField birthday = new JFormattedTextField();
-    private JTextField phoneNumber = new JTextField(15);
+    private JTextField phoneNumber = new JTextField(16);
+    private JTextField email = new JTextField(20);
+    private JTextArea address = new JTextArea(3, 20);
     private JButton saveButton = new JButton();
     private final MainWindow parentFrame;
     private MedicalCardModel model;
@@ -53,8 +56,12 @@ public class EditMedicalCardPanel extends JPanel {
 
         JLabel nameLabel = new JLabel("Имя");
         JLabel surnameLabel = new JLabel("Фамилия");
+        JLabel middleNameLabel = new JLabel("Отчество");
         JLabel birthdayLabel = new JLabel("Год рождения");
         JLabel phoneNumberLabel = new JLabel("Контактный телефон");
+        JLabel emailLabel = new JLabel("Адрес электронной почты");
+        JLabel addressLabel = new JLabel("Адрес");
+        address.setLineWrap(true);
 
         birthday.setColumns(10);
 
@@ -64,22 +71,34 @@ public class EditMedicalCardPanel extends JPanel {
         GroupLayout.SequentialGroup surnameRow = UIHelper.createFixedRowFromParams(layout, surnameLabel, surname);
         GroupLayout.ParallelGroup surnameColumn = UIHelper.createFixedColumnFromParams(layout, surnameLabel, surname);
 
+        GroupLayout.SequentialGroup midNameRow = UIHelper.createFixedRowFromParams(layout, middleNameLabel, middleName);
+        GroupLayout.ParallelGroup midNameColumn = UIHelper.createFixedColumnFromParams(layout, middleNameLabel, middleName);
+
         GroupLayout.SequentialGroup birthdayRow = UIHelper.createFixedRowFromParams(layout, birthdayLabel, birthday);
         GroupLayout.ParallelGroup birthColumn = UIHelper.createFixedColumnFromParams(layout, birthdayLabel, birthday);
 
+        GroupLayout.SequentialGroup emailRow = UIHelper.createFixedRowFromParams(layout, emailLabel, email);
+        GroupLayout.ParallelGroup emailColumn = UIHelper.createFixedColumnFromParams(layout, emailLabel, email);
+
         GroupLayout.SequentialGroup phoneNumRow = UIHelper.createFixedRowFromParams(layout, phoneNumberLabel, phoneNumber);
         GroupLayout.ParallelGroup phoneNumColumn = UIHelper.createFixedColumnFromParams(layout, phoneNumberLabel, phoneNumber);
+
+        GroupLayout.SequentialGroup addressRow = UIHelper.createFixedRowFromParams(layout, addressLabel, address);
+        GroupLayout.ParallelGroup addressColumn = UIHelper.createFixedColumnFromParams(layout, addressLabel, address);
 
         GroupLayout.SequentialGroup saveButtonRow = layout.createSequentialGroup().addComponent(saveButton);
         GroupLayout.ParallelGroup saveButtonColumn = layout.createParallelGroup().addComponent(saveButton);
 
         //todo add gap between text fields and [Save] button
         layout.setHorizontalGroup(layout.createParallelGroup().addGroup(nameRow).addGroup(surnameRow)
-                .addGroup(birthdayRow).addGroup(phoneNumRow).addGroup(saveButtonRow));
+                .addGroup(midNameRow).addGroup(birthdayRow).addGroup(emailRow).addGroup(phoneNumRow)
+                .addGroup(addressRow).addGroup(saveButtonRow));
         layout.setVerticalGroup(layout.createSequentialGroup().addGroup(nameColumn).addGroup(surnameColumn)
-                .addGroup(birthColumn).addGroup(phoneNumColumn).addGroup(saveButtonColumn));
+                .addGroup(midNameColumn).addGroup(birthColumn).addGroup(emailColumn).addGroup(phoneNumColumn)
+                .addGroup(addressColumn).addGroup(saveButtonColumn));
 
-        layout.linkSize(SwingConstants.HORIZONTAL, nameLabel, surnameLabel, birthdayLabel, phoneNumberLabel);
+        layout.linkSize(SwingConstants.HORIZONTAL, nameLabel, surnameLabel, middleNameLabel,
+                birthdayLabel, phoneNumberLabel, emailLabel, addressLabel);
     }
 
     public void injectMedicalCardModel(MedicalCardModel cardModel) {
@@ -88,6 +107,9 @@ public class EditMedicalCardPanel extends JPanel {
         surname.setDocument(cardModel.getSurnameDoc());
         birthday.setDocument(cardModel.getBirthdayDoc());
         phoneNumber.setDocument(cardModel.getContactPhoneDoc());
+        email.setDocument(cardModel.getEmailDoc());
+        address.setDocument(cardModel.getAddressDoc());
+        middleName.setDocument(cardModel.getMiddleNameDoc());
     }
 
     public MedicalCardModel getModel() {

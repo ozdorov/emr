@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SearchPopup extends JDialog {
-    private JTextField nameField = new JTextField(15);
     private JTextField surnameField = new JTextField(15);
     private JButton startSearchButton = new JButton();
     private JButton openMedicalCardButton = new JButton();
@@ -44,21 +43,17 @@ public class SearchPopup extends JDialog {
         searchResultsList.setVisibleRowCount(3);
         JScrollPane scrollPaneForList = new JScrollPane(searchResultsList);
 
-        //create row and column for name
-        GroupLayout.SequentialGroup nameRow = layout.createSequentialGroup().addComponent(nameLabel).addGap(100).addComponent(nameField);
-        GroupLayout.ParallelGroup nameColumn = layout.createParallelGroup().addComponent(nameLabel).addComponent(nameField);
-
         //create row and column for surname
         GroupLayout.SequentialGroup surnameRow = layout.createSequentialGroup().addComponent(surnameLabel).addGap(100).addComponent(surnameField);
         GroupLayout.ParallelGroup surnameColumn = layout.createParallelGroup().addComponent(surnameLabel).addComponent(surnameField);
 
-        layout.setHorizontalGroup(layout.createParallelGroup().addGroup(nameRow).addGroup(surnameRow)
+        layout.setHorizontalGroup(layout.createParallelGroup().addGroup(surnameRow)
                 .addComponent(startSearchButton, GroupLayout.Alignment.LEADING).addComponent(scrollPaneForList)
                 .addComponent(openMedicalCardButton, GroupLayout.Alignment.TRAILING));
-        layout.setVerticalGroup(layout.createSequentialGroup().addGroup(nameColumn).addGroup(surnameColumn)
+        layout.setVerticalGroup(layout.createSequentialGroup().addGroup(surnameColumn)
                 .addComponent(startSearchButton).addComponent(scrollPaneForList).addComponent(openMedicalCardButton));
 
-        layout.linkSize(SwingConstants.HORIZONTAL, nameLabel, surnameLabel);
+        layout.linkSize(SwingConstants.HORIZONTAL, surnameLabel);
     }
 
     private void tuneSearchButton() {
@@ -80,7 +75,6 @@ public class SearchPopup extends JDialog {
 
     public SearchByNameModel getSearchByNameModel() {
         SearchByNameModel model = new SearchByNameModel();
-        model.setName(nameField.getText());
         model.setSurname(surnameField.getText());
         return model;
     }
