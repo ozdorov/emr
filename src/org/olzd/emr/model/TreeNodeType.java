@@ -5,5 +5,6 @@ public enum TreeNodeType {
     ANALYSIS_PLACEHOLDER,
     SURGERY_PLACEHOLDER,
     ANALYSIS_TYPE,
+    ANALYSIS_FILE,
     ROOT,
 }

@@ -2,6 +2,8 @@ package org.olzd.emr.model;
 
 import org.olzd.emr.entity.MedicalCard;
 
+import java.io.File;
+
 public class TreeNodeModel {
     private TreeNodeType nodeType;
     private Object data;
@@ -15,12 +17,19 @@ public class TreeNodeModel {
         return nodeType;
     }
 
+    public Object getData() {
+        return data;
+    }
+
     public String toString() {
         if (nodeType == TreeNodeType.CARDNODE) {
             MedicalCard card = (MedicalCard) data;
             return new StringBuilder(card.getSurname()).append(',').append(card.getName()).toString();
         } else if (nodeType == TreeNodeType.ANALYSIS_PLACEHOLDER) {
             return data.toString();
+        } else if (nodeType == TreeNodeType.ANALYSIS_FILE) {
+            File file = (File) data;
+            return file.getName();
         }
 
 

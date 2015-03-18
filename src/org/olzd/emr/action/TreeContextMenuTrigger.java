@@ -3,12 +3,16 @@ package org.olzd.emr.action;
 import org.olzd.emr.StaticValues;
 import org.olzd.emr.model.ContextMenuCommand;
 import org.olzd.emr.model.TreeNodeModel;
+import org.olzd.emr.model.TreeNodeType;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class TreeContextMenuTrigger extends MouseAdapter {
@@ -31,13 +35,41 @@ public class TreeContextMenuTrigger extends MouseAdapter {
                 if (model == null) {
                     return;
                 }
-                updateVisibility(treeContextMenu, model);
+                updateMenuItemsVisibility(treeContextMenu, model);
                 treeContextMenu.show(cardStructureTree, x, y);
             }
         }
     }
 
-    protected void updateVisibility(JPopupMenu contextMenu, TreeNodeModel treeNodeModel) {
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        //double-click
+        if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+            int x = e.getX();
+            int y = e.getY();
+            TreePath path = cardStructureTree.getPathForLocation(x, y);
+            if (path != null) {
+                DefaultMutableTreeNode clickedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+                TreeNodeModel model = (TreeNodeModel) clickedNode.getUserObject();
+                if (model == null) {
+                    return;
+                }
+                if (model.getNodeType() == TreeNodeType.ANALYSIS_FILE) {
+                    openAttachedFile((File) model.getData());
+                }
+            }
+        }
+    }
+
+    protected void openAttachedFile(File attachedFile) {
+        try {
+            Desktop.getDesktop().open(attachedFile);
+        } catch (IOException e1) {
+            System.out.println(e1);
+        }
+    }
+
+    protected void updateMenuItemsVisibility(JPopupMenu contextMenu, TreeNodeModel treeNodeModel) {
         List<ContextMenuCommand> availableCommands = StaticValues.getAvailableCommandsList(treeNodeModel.getNodeType());
         MenuElement[] elements = contextMenu.getSubElements();
         for (MenuElement elem : elements) {
@@ -54,7 +86,7 @@ public class TreeContextMenuTrigger extends MouseAdapter {
                     continue;
                 }
                 menuItem.setEnabled(availableCommands.contains(curCommand));
-                //menuItem.getAction().putValue("clickedTreeNodeModel", treeNodeModel);
+                menuItem.getAction().putValue("clickedTreeNodeModel", treeNodeModel);
             }
         }
     }

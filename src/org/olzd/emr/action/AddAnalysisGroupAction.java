@@ -1,12 +1,11 @@
 package org.olzd.emr.action;
 
+import org.olzd.emr.TreeHelper;
 import org.olzd.emr.model.TreeNodeModel;
 import org.olzd.emr.model.TreeNodeType;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
 import java.awt.event.ActionEvent;
 
 public class AddAnalysisGroupAction extends AbstractAction {
@@ -31,13 +30,8 @@ public class AddAnalysisGroupAction extends AbstractAction {
             TreeNodeModel nodeModel = (TreeNodeModel) nextNode.getUserObject();
             if (nodeModel.getNodeType() == TreeNodeType.ANALYSIS_PLACEHOLDER) {
 
-                TreeNodeModel treeNodeModel = new TreeNodeModel(groupName, TreeNodeType.ANALYSIS_TYPE);
-                DefaultMutableTreeNode newGroup = new DefaultMutableTreeNode(treeNodeModel);
-
-                ((DefaultTreeModel) tree.getModel()).insertNodeInto(newGroup, nextNode, 0);
-
-                //expand node programmatically
-                tree.expandPath(new TreePath(nextNode.getPath()));
+                TreeHelper treeHelper = new TreeHelper();
+                treeHelper.insertNewNode(tree, nextNode, groupName, TreeNodeType.ANALYSIS_TYPE, true);
             }
         }
 
