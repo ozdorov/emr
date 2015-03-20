@@ -16,10 +16,10 @@ import java.awt.*;
 public class MainWindow extends JFrame {
     private SearchPopup searchPopup;
     private JSplitPane splitPane = new JSplitPane();
-    private JTree cardStructureTree;
-    private DefaultTreeModel cardStructureTreeModel;
+    private JTree cardStructureTree = new JTree();
     private JPanel emptyPanel = new JPanel();
-    private EditMedicalCardPanel medicalCardPanel;
+    private EditMedicalCardPanel medicalCardPanel = new EditMedicalCardPanel(this);
+    private ExaminationPanel examinationPanel = new ExaminationPanel(this);
     private JPopupMenu treeContextMenu = new JPopupMenu();
 
     public MainWindow() {
@@ -38,18 +38,8 @@ public class MainWindow extends JFrame {
     }
 
     private void constructTree() {
-        TreeNodeModel nodeModelTop = new TreeNodeModel("Карточка пациента", TreeNodeType.ROOT);
-        TreeNodeModel nodeModelAnalysis = new TreeNodeModel("Анализы", TreeNodeType.ANALYSIS_PLACEHOLDER);
-        TreeNodeModel nodeModelOperations = new TreeNodeModel("Операции", TreeNodeType.SURGERY_PLACEHOLDER);
-        DefaultMutableTreeNode top = new DefaultMutableTreeNode(nodeModelTop);
-        DefaultMutableTreeNode placeholderForAnalysis = new DefaultMutableTreeNode(nodeModelAnalysis);
-        DefaultMutableTreeNode placeholderForOperations = new DefaultMutableTreeNode(nodeModelOperations);
-        top.add(placeholderForAnalysis);
-        top.add(placeholderForOperations);
-
-        cardStructureTreeModel = new DefaultTreeModel(top);
-
-        cardStructureTree = new JTree(cardStructureTreeModel);
+        DefaultTreeModel tempModel = new DefaultTreeModel(null);
+        cardStructureTree.setModel(tempModel);
         cardStructureTree.setCellRenderer(new CustomTreeRenderer());
         cardStructureTree.setScrollsOnExpand(true);
         cardStructureTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -125,9 +115,6 @@ public class MainWindow extends JFrame {
     }
 
     public EditMedicalCardPanel getMedicalCardPanel() {
-        if (medicalCardPanel == null) {
-            medicalCardPanel = new EditMedicalCardPanel(this);
-        }
         return medicalCardPanel;
     }
 
@@ -140,6 +127,9 @@ public class MainWindow extends JFrame {
         public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
             super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
             DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) value;
+            if (!(treeNode.getUserObject() instanceof TreeNodeModel)) {
+                return this;
+            }
             TreeNodeModel nodeModel = (TreeNodeModel) treeNode.getUserObject();
             TreeNodeType nodeType = nodeModel.getNodeType();
             if (nodeType == TreeNodeType.ANALYSIS_PLACEHOLDER || nodeType == TreeNodeType.ANALYSIS_TYPE

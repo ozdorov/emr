@@ -1,7 +1,8 @@
 package org.olzd.emr;
 
-import com.sun.java.swing.plaf.windows.WindowsTreeUI;
+import org.olzd.emr.action.TreeModificationListener;
 import org.olzd.emr.entity.MedicalCard;
+import org.olzd.emr.model.MedicalCardTreeModel;
 import org.olzd.emr.model.TreeNodeModel;
 import org.olzd.emr.model.TreeNodeType;
 
@@ -9,8 +10,6 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-import java.util.Arrays;
-import java.util.List;
 
 public class TreeHelper {
     public void insertNewNode(JTree tree, DefaultMutableTreeNode parentNode, Object data, TreeNodeType nodeType, boolean expandParent) {
@@ -36,28 +35,19 @@ public class TreeHelper {
 //    }
 
     public void syncTreeWithCard(JTree tree, MedicalCard card) {
-        tree.setUI(new WindowsTreeUI()); //test row:)
-
+        MedicalCardTreeModel treeModel = new MedicalCardTreeModel(null);
+        treeModel.addTreeModelListener(new TreeModificationListener());
+        tree.setModel(treeModel);
         TreeNodeModel nodeModelTop = new TreeNodeModel("Карточка пациента", TreeNodeType.ROOT);
         DefaultMutableTreeNode top = new DefaultMutableTreeNode(nodeModelTop);
-        DefaultTreeModel treeModel = new DefaultTreeModel(top);
+        treeModel.setRoot(top);
 
-        TreeNodeModel nodeModelAnalysis = new TreeNodeModel("Анализы", TreeNodeType.ANALYSIS_PLACEHOLDER);
-        TreeNodeModel nodeModelOperations = new TreeNodeModel("Операции", TreeNodeType.SURGERY_PLACEHOLDER);
-        TreeNodeModel nodeModelMedInspection = new TreeNodeModel("Осмотры", TreeNodeType.ANALYSIS_TYPE); //Temp type
-        TreeNodeModel nodeModelTechInspection = new TreeNodeModel("Инструментальные исследования", TreeNodeType.ANALYSIS_TYPE); //Temp type
-
-        DefaultMutableTreeNode analysis = new DefaultMutableTreeNode(nodeModelAnalysis);
-        DefaultMutableTreeNode operations = new DefaultMutableTreeNode(nodeModelOperations);
-        DefaultMutableTreeNode inspections = new DefaultMutableTreeNode(nodeModelMedInspection);
-        DefaultMutableTreeNode techInspection = new DefaultMutableTreeNode(nodeModelTechInspection);
-        List<DefaultMutableTreeNode> folders = Arrays.asList(analysis, operations, inspections, techInspection);
-
-
-        for (int i = 0; i < folders.size(); i++) {
-            treeModel.insertNodeInto(folders.get(i), top, i);
-        }
+        insertNewNode(tree, top, "Анализы", TreeNodeType.ANALYSIS_PLACEHOLDER, false);
+        insertNewNode(tree, top, "Операции", TreeNodeType.SURGERY_PLACEHOLDER, false);
+        insertNewNode(tree, top, "Осмотры", TreeNodeType.ANALYSIS_TYPE, false);      //temp type
+        insertNewNode(tree, top, "Инструментальные исследования", TreeNodeType.ANALYSIS_TYPE, false); //temp
 
         insertNewNode(tree, top, card, TreeNodeType.CARDNODE, false);
+        tree.expandPath(new TreePath(top.getPath()));
     }
 }

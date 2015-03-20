@@ -18,6 +18,9 @@ public class EditMedicalCardActionBase extends AbstractAction {
         MedicalCardModel model = new MedicalCardModel();
         mainWindow.getMedicalCardPanel().injectMedicalCardModel(model);
 
+//        TreeHelper treeHelper = new TreeHelper();
+//        treeHelper.syncTreeWithCard(mainWindow.getCardStructureTree(), model.getCard());
+
         mainWindow.showMedicalCardPanel(true);
     }
 }

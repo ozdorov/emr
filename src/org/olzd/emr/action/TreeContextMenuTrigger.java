@@ -24,6 +24,16 @@ public class TreeContextMenuTrigger extends MouseAdapter {
         treeContextMenu = contextMenu;
     }
 
+    @Override
+    public void mousePressed(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+        TreePath path = cardStructureTree.getPathForLocation(x, y);
+        if (path != null) {
+            cardStructureTree.setSelectionPath(path);
+        }
+    }
+
     public void mouseReleased(MouseEvent e) {
         if (e.isPopupTrigger()) {
             int x = e.getX();

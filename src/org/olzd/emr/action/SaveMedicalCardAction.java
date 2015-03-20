@@ -5,6 +5,7 @@ import org.olzd.emr.service.MedicalCardService;
 import org.olzd.emr.view.EditMedicalCardPanel;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultTreeModel;
 import java.awt.event.ActionEvent;
 
 public class SaveMedicalCardAction extends AbstractAction {
@@ -16,7 +17,6 @@ public class SaveMedicalCardAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //todo there might be existing card, not new.
         MedicalCardService cardService = new MedicalCardService();
         MedicalCard card = panel.getModel().getCard();
 
@@ -26,7 +26,8 @@ public class SaveMedicalCardAction extends AbstractAction {
             cardService.createMedicalCard(card);
         }
 
-        panel.refreshCardStructureTree();
+        DefaultTreeModel treeModel = (DefaultTreeModel) panel.getParentFrame().getCardStructureTree().getModel();
+        treeModel.reload();
     }
 
 }

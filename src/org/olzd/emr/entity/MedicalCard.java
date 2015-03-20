@@ -1,6 +1,8 @@
 package org.olzd.emr.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MedicalCard {
     private Integer cardId;
@@ -8,13 +10,12 @@ public class MedicalCard {
     private String surname;
     private String middleName;
     private Date dateOfBirth;
+    private Date dateOfNextExamination;
     private String contactPhone;
     private String email;
-    private String motherName;
-    private String motherPhone;
-    private String fatherName;
-    private String fatherPhone;
     private String address;
+    private List<AttachedFileWrapper> analysisAttachedFiles = new ArrayList<>(5);
+    private List<AttachedFileWrapper> techExaminationAttachedFiles = new ArrayList<>(5);
     private boolean wasModified;
 
     public String getName() {
@@ -85,39 +86,6 @@ public class MedicalCard {
         this.email = email;
     }
 
-
-    public String getMotherName() {
-        return motherName;
-    }
-
-    public void setMotherName(String motherName) {
-        this.motherName = motherName;
-    }
-
-    public String getMotherPhone() {
-        return motherPhone;
-    }
-
-    public void setMotherPhone(String motherPhone) {
-        this.motherPhone = motherPhone;
-    }
-
-    public String getFatherName() {
-        return fatherName;
-    }
-
-    public void setFatherName(String fatherName) {
-        this.fatherName = fatherName;
-    }
-
-    public String getFatherPhone() {
-        return fatherPhone;
-    }
-
-    public void setFatherPhone(String fatherPhone) {
-        this.fatherPhone = fatherPhone;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -125,4 +93,22 @@ public class MedicalCard {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public Date getDateOfNextExamination() {
+        return dateOfNextExamination;
+    }
+
+    public void setDateOfNextExamination(Date dateOfNextExamination) {
+        this.dateOfNextExamination = dateOfNextExamination;
+    }
+
+    public List<AttachedFileWrapper> getAnalysisAttachedFiles() {
+        return analysisAttachedFiles;
+    }
+
+    public void addNewAnalysisAttachedFile(AttachedFileWrapper fileWrapper) {
+        analysisAttachedFiles.add(fileWrapper);
+    }
+
+
 }

@@ -29,6 +29,8 @@ public class ShowMedicalCardAction extends AbstractAction {
         EditMedicalCardPanel medicalCardPanel = mainWindow.getMedicalCardPanel();
         MedicalCardModel model = new MedicalCardModel(selectedCard.getMedicalCard());
         medicalCardPanel.injectMedicalCardModel(model);
+//        TreeHelper treeHelper = new TreeHelper();
+//        treeHelper.syncTreeWithCard(mainWindow.getCardStructureTree(), model.getCard());
 
         mainWindow.showMedicalCardPanel(true);
         searchPopup.cleanupPopup();
