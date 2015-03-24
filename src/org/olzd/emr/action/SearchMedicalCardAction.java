@@ -1,6 +1,5 @@
 package org.olzd.emr.action;
 
-import org.olzd.emr.entity.MedicalCard;
 import org.olzd.emr.model.SearchByNameModel;
 import org.olzd.emr.model.SearchResult;
 import org.olzd.emr.service.MedicalCardService;
@@ -26,15 +25,13 @@ public class SearchMedicalCardAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         SearchByNameModel searchByNameModel = searchPopup.getSearchByNameModel();
 
-        //don't do anything if name and surname are empty?
-
         MedicalCardService cardService = new MedicalCardService();
-        List<MedicalCard> res = cardService.findMedicalCardByName(searchByNameModel);
+        List<SearchResult> res = cardService.findMedicalCardByName(searchByNameModel);
 
         DefaultListModel<SearchResult> listModel = searchPopup.getSearchResultsModel();
         int counter = 0;
-        for (MedicalCard card : res) {
-            listModel.add(counter++, SearchResult.createSearchResultFromCard(card));
+        for (SearchResult card : res) {
+            listModel.add(counter++, card);
         }
     }
 }

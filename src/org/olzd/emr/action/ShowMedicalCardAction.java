@@ -1,7 +1,9 @@
 package org.olzd.emr.action;
 
+import org.olzd.emr.entity.MedicalCard;
 import org.olzd.emr.model.MedicalCardModel;
 import org.olzd.emr.model.SearchResult;
+import org.olzd.emr.service.MedicalCardService;
 import org.olzd.emr.view.EditMedicalCardPanel;
 import org.olzd.emr.view.MainWindow;
 import org.olzd.emr.view.popups.SearchPopup;
@@ -24,10 +26,12 @@ public class ShowMedicalCardAction extends AbstractAction {
             return;
         }
         SearchResult selectedCard = jListOfCards.getSelectedValue();
+        MedicalCardService medicalCardService = new MedicalCardService();
+        MedicalCard loadedCard = medicalCardService.loadMedicalCard(selectedCard);
 
         MainWindow mainWindow = (MainWindow) searchPopup.getOwner();
         EditMedicalCardPanel medicalCardPanel = mainWindow.getMedicalCardPanel();
-        MedicalCardModel model = new MedicalCardModel(selectedCard.getMedicalCard());
+        MedicalCardModel model = new MedicalCardModel(loadedCard);
         medicalCardPanel.injectMedicalCardModel(model);
 //        TreeHelper treeHelper = new TreeHelper();
 //        treeHelper.syncTreeWithCard(mainWindow.getCardStructureTree(), model.getCard());

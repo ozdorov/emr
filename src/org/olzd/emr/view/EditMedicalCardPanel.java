@@ -125,11 +125,6 @@ public class EditMedicalCardPanel extends JPanel {
         pcs.addPropertyChangeListener("model", listener);
     }
 
-    public void refreshCardStructureTree() {
-        //todo remove this hack and refresh tree when saving new Card
-        pcs.firePropertyChange("model", null, this.model);
-    }
-
     public MainWindow getParentFrame() {
         return parentFrame;
     }

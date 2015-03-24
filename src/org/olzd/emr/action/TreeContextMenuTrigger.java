@@ -1,7 +1,9 @@
 package org.olzd.emr.action;
 
 import org.olzd.emr.StaticValues;
+import org.olzd.emr.entity.AttachedFileWrapper;
 import org.olzd.emr.model.ContextMenuCommand;
+import org.olzd.emr.model.MedicalCardTreeModel;
 import org.olzd.emr.model.TreeNodeModel;
 import org.olzd.emr.model.TreeNodeType;
 
@@ -65,7 +67,9 @@ public class TreeContextMenuTrigger extends MouseAdapter {
                     return;
                 }
                 if (model.getNodeType() == TreeNodeType.ANALYSIS_FILE) {
-                    openAttachedFile((File) model.getData());
+                    AttachedFileWrapper fileWrapper = (AttachedFileWrapper) model.getData();
+                    File f = new File(fileWrapper.getPathToFile());
+                    openAttachedFile(f);
                 }
             }
         }
@@ -90,8 +94,13 @@ public class TreeContextMenuTrigger extends MouseAdapter {
                     continue;
                 }
                 ContextMenuCommand curCommand = (ContextMenuCommand) menuItem.getAction().getValue("command");
+                MedicalCardTreeModel treeModel = (MedicalCardTreeModel) cardStructureTree.getModel();
                 if (availableCommands == null) {
                     //if no commands are available then disable or hide
+                    menuItem.setEnabled(false);
+                    continue;
+                } else if (!treeModel.getCard().isExisting()) {
+                    //disable all menu items if new card is not saved.
                     menuItem.setEnabled(false);
                     continue;
                 }

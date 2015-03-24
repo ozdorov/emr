@@ -1,7 +1,9 @@
 package org.olzd.emr.service;
 
+import org.olzd.emr.entity.AttachedFileWrapper;
 import org.olzd.emr.entity.MedicalCard;
 import org.olzd.emr.model.SearchByNameModel;
+import org.olzd.emr.model.SearchResult;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,16 +11,15 @@ import java.util.List;
 
 public class MedicalCardService {
 
-    public List<MedicalCard> findMedicalCardByName(SearchByNameModel searchByName) {
-        List<MedicalCard> res = new ArrayList<>(3);
+    public MedicalCard loadMedicalCard(SearchResult searchByName) {
+        MedicalCard card = new MedicalCard();
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
             String findQuery = "select card_id, name, middle_name, surname, birthday, contact_phone, email, address"
-                    + " from medical_card where surname like concat(?, '%')";
+                    + " from medical_card where card_id = ?";
             try (PreparedStatement st = conn.prepareStatement(findQuery)) {
-                st.setString(1, searchByName.getSurname());
+                st.setInt(1, searchByName.getCardId());
                 ResultSet rs = st.executeQuery();
                 while (rs.next()) {
-                    MedicalCard card = new MedicalCard();
                     card.setCardId(rs.getInt(1));
                     card.setName(rs.getString(2));
                     card.setMiddleName(rs.getString(3));
@@ -28,7 +29,26 @@ public class MedicalCardService {
                     card.setEmail(rs.getString(7));
                     card.setAddress(rs.getString(8));
 
-                    res.add(card);
+                    card.setAnalysisAttachedFiles(findAllAttachedAnalysisFiles(card));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return card;
+    }
+
+    public List<SearchResult> findMedicalCardByName(SearchByNameModel searchByName) {
+        List<SearchResult> res = new ArrayList<>(3);
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+            String findQuery = "select card_id, name, surname"
+                    + " from medical_card where surname like concat(?, '%')";
+            try (PreparedStatement st = conn.prepareStatement(findQuery)) {
+                st.setString(1, searchByName.getSurname());
+                ResultSet rs = st.executeQuery();
+                while (rs.next()) {
+                    res.add(new SearchResult(rs.getInt(1), rs.getString(2), rs.getString(3)));
                 }
             }
         } catch (SQLException e) {
@@ -92,7 +112,36 @@ public class MedicalCardService {
         }
     }
 
-    public void saveAnalysisDocLocation() {
+    public void saveAnalysisFile(MedicalCard card, AttachedFileWrapper analysisFile) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+            String insertSQL = new StringBuilder("insert into analysis_docs" +
+                    "(card_id, analysis_group, analysis_doc_location) values (?, ?, ?)").toString();
+            try (PreparedStatement statement = conn.prepareStatement(insertSQL)) {
+                statement.setInt(1, card.getCardId());
+                statement.setString(2, analysisFile.getGroupName());
+                statement.setString(3, analysisFile.getPathToFile());
+                statement.execute();
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
 
+    public List<AttachedFileWrapper> findAllAttachedAnalysisFiles(MedicalCard card) {
+        List<AttachedFileWrapper> result = new ArrayList<>(5);
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+            String insertSQL = new StringBuilder("select analysis_group, analysis_doc_location from analysis_docs" +
+                    " where card_id = ?").toString();
+            try (PreparedStatement st = conn.prepareStatement(insertSQL)) {
+                st.setInt(1, card.getCardId());
+                ResultSet rs = st.executeQuery();
+                while (rs.next()) {
+                    result.add(new AttachedFileWrapper(rs.getString(2), rs.getString(1)));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return result;
     }
 }

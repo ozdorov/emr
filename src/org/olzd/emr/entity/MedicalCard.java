@@ -1,8 +1,6 @@
 package org.olzd.emr.entity;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class MedicalCard {
     private Integer cardId;
@@ -102,13 +100,15 @@ public class MedicalCard {
         this.dateOfNextExamination = dateOfNextExamination;
     }
 
-    public List<AttachedFileWrapper> getAnalysisAttachedFiles() {
-        return analysisAttachedFiles;
+    public Collection<AttachedFileWrapper> getAnalysisAttachedFiles() {
+        return Collections.unmodifiableCollection(analysisAttachedFiles);
     }
 
     public void addNewAnalysisAttachedFile(AttachedFileWrapper fileWrapper) {
         analysisAttachedFiles.add(fileWrapper);
     }
 
-
+    public void setAnalysisAttachedFiles(List<AttachedFileWrapper> attachedFiles) {
+        analysisAttachedFiles = new ArrayList<>(attachedFiles);
+    }
 }

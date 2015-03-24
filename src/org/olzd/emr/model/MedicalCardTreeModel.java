@@ -8,8 +8,9 @@ import javax.swing.tree.TreeNode;
 public class MedicalCardTreeModel extends DefaultTreeModel {
     private MedicalCard card;
 
-    public MedicalCardTreeModel(TreeNode root) {
+    public MedicalCardTreeModel(MedicalCard card, TreeNode root) {
         super(root);
+        this.card = card;
     }
 
     public MedicalCardTreeModel(TreeNode root, boolean asksAllowsChildren) {

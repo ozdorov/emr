@@ -1,26 +1,30 @@
 package org.olzd.emr.model;
 
-import org.olzd.emr.entity.MedicalCard;
-
 /**
  * Represents 1 row from list of found patients
  */
 public class SearchResult {
-    public SearchResult(MedicalCard medicalCard) {
-        this.medicalCard = medicalCard;
+    public int getCardId() {
+        return cardId;
     }
 
-    private final MedicalCard medicalCard;
+    public String getSurname() {
+        return surname;
+    }
 
-    public MedicalCard getMedicalCard() {
-        return medicalCard;
+    private int cardId;
+    private String name;
+    private String surname;
+
+
+    public SearchResult(int cardId, String name, String surname) {
+        this.cardId = cardId;
+        this.name = name;
+        this.surname = surname;
     }
 
     public String toString() {
-        return new StringBuilder(medicalCard.getSurname()).append(',').append(medicalCard.getName()).toString();
+        return new StringBuilder(surname).append(',').append(name).toString();
     }
 
-    public static SearchResult createSearchResultFromCard(MedicalCard card) {
-        return new SearchResult(card);
-    }
 }

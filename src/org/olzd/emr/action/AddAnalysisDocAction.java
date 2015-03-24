@@ -1,8 +1,12 @@
 package org.olzd.emr.action;
 
 import org.olzd.emr.TreeHelper;
+import org.olzd.emr.entity.AttachedFileWrapper;
+import org.olzd.emr.entity.MedicalCard;
+import org.olzd.emr.model.MedicalCardTreeModel;
 import org.olzd.emr.model.TreeNodeModel;
 import org.olzd.emr.model.TreeNodeType;
+import org.olzd.emr.service.MedicalCardService;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -15,7 +19,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 public class AddAnalysisDocAction extends AbstractAction {
-    private static final String ATTACHED_FILES_DIRECTORY = "docs";
+    private static final String ATTACHED_ANALYSIS_DIRECTORY = "docs/analysis";
     private JTree tree;
 
     public AddAnalysisDocAction(JTree tree, String label) {
@@ -31,10 +35,11 @@ public class AddAnalysisDocAction extends AbstractAction {
 
         TreeNodeModel model = (TreeNodeModel) getValue("clickedTreeNodeModel");
 
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            copySelectedFileToInnerDirectory(fc.getSelectedFile());
+        if (returnVal != JFileChooser.APPROVE_OPTION) {
+            return;
         }
 
+        MedicalCard card = ((MedicalCardTreeModel) tree.getModel()).getCard();
         DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) tree.getModel().getRoot();
 
         for (int i = 0; i < rootNode.getChildCount(); i++) {
@@ -46,8 +51,17 @@ public class AddAnalysisDocAction extends AbstractAction {
                     TreeNodeModel analysisModel = (TreeNodeModel) analysisGroup.getUserObject();
 
                     if (analysisModel.toString().equals(model.toString())) {
+                        String subgroupName = analysisModel.toString();
+                        String pathToFile = copySelectedFileToInnerDirectory(fc.getSelectedFile(), subgroupName);
+                        AttachedFileWrapper fileWrapper =
+                                new AttachedFileWrapper(pathToFile, analysisModel.toString());
+
                         TreeHelper treeHelper = new TreeHelper();
-                        treeHelper.insertNewNode(tree, analysisGroup, fc.getSelectedFile(), TreeNodeType.ANALYSIS_FILE, true);
+                        treeHelper.insertNewNode(tree, analysisGroup, fileWrapper, TreeNodeType.ANALYSIS_FILE, true);
+
+                        card.addNewAnalysisAttachedFile(fileWrapper);
+                        MedicalCardService medicalCardService = new MedicalCardService();
+                        medicalCardService.saveAnalysisFile(card, fileWrapper);
                         return;
                     }
                 }
@@ -55,15 +69,19 @@ public class AddAnalysisDocAction extends AbstractAction {
         }
     }
 
-    protected void copySelectedFileToInnerDirectory(File file) {
+    protected String copySelectedFileToInnerDirectory(File file, String subgroupName) {
+        String resultPath = null;
         try {
-            Path destDir = Paths.get("").toAbsolutePath().resolve(ATTACHED_FILES_DIRECTORY);
+            Path destDir = Paths.get("").toAbsolutePath().resolve(ATTACHED_ANALYSIS_DIRECTORY).resolve(subgroupName);
             if (!Files.exists(destDir)) {
                 Files.createDirectory(destDir);
             }
-            Files.copy(file.toPath(), destDir.resolve(file.getName()), StandardCopyOption.REPLACE_EXISTING);
+            resultPath = Files.copy(file.toPath(), destDir.resolve(file.getName()), StandardCopyOption.REPLACE_EXISTING).toString();
         } catch (IOException e1) {
             System.out.println(e1);
+            throw new RuntimeException(e1);
+        } finally {
+            return resultPath;
         }
     }
 }
