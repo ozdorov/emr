@@ -1,6 +1,7 @@
 package org.olzd.emr;
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,5 +35,10 @@ public class UIHelper {
             return new SimpleDateFormat("dd/MM/yyyy").parse(stringDate);
         }
         return null;
+    }
+
+    public static void setAutoScrollingForTextArea(JTextArea textArea) {
+        DefaultCaret caret = (DefaultCaret) textArea.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
     }
 }

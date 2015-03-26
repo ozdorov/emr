@@ -12,6 +12,9 @@ public class MedicalCard {
     private String contactPhone;
     private String email;
     private String address;
+    private String mainDiagnosis;
+    private String relatedDiagnosis;
+    private ParentsInfo parentsInfo;
     private List<AttachedFileWrapper> analysisAttachedFiles = new ArrayList<>(5);
     private List<AttachedFileWrapper> techExaminationAttachedFiles = new ArrayList<>(5);
     private boolean wasModified;
@@ -110,5 +113,32 @@ public class MedicalCard {
 
     public void setAnalysisAttachedFiles(List<AttachedFileWrapper> attachedFiles) {
         analysisAttachedFiles = new ArrayList<>(attachedFiles);
+    }
+
+    public String getMainDiagnosis() {
+        return mainDiagnosis;
+    }
+
+    public void setMainDiagnosis(String mainDiagnosis) {
+        this.mainDiagnosis = mainDiagnosis;
+    }
+
+    public String getRelatedDiagnosis() {
+        return relatedDiagnosis;
+    }
+
+    public void setRelatedDiagnosis(String relatedDiagnosis) {
+        this.relatedDiagnosis = relatedDiagnosis;
+    }
+
+    public ParentsInfo getParentsInfo() {
+        if (parentsInfo == null) {
+            parentsInfo = new ParentsInfo();
+        }
+        return parentsInfo;
+    }
+
+    public void setParentsInfo(ParentsInfo parentsInfo) {
+        this.parentsInfo = parentsInfo;
     }
 }

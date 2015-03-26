@@ -133,7 +133,7 @@ public class MainWindow extends JFrame {
             TreeNodeModel nodeModel = (TreeNodeModel) treeNode.getUserObject();
             TreeNodeType nodeType = nodeModel.getNodeType();
             if (nodeType == TreeNodeType.ANALYSIS_PLACEHOLDER || nodeType == TreeNodeType.ANALYSIS_TYPE
-                    || nodeType == TreeNodeType.SURGERY_PLACEHOLDER) {
+                    || nodeType == TreeNodeType.SURGERY_PLACEHOLDER || nodeType == TreeNodeType.EXAMINATION_PLACEHOLDER) {
                 setIcon(getDefaultOpenIcon());
             }
 
