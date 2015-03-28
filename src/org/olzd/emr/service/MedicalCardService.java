@@ -17,7 +17,7 @@ public class MedicalCardService {
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
             String findQuery = "select card.card_id, name, middle_name, surname, birthday, contact_phone, email, address, "
                     + "diagnosis, related_diagnosis, next_exam_date, mother_name, mother_phone, father_name, father_phone "
-                    + "from medical_card card, parents_info par where card.card_id = par.card_id and card.card_id = ?";
+                    + "from medical_card card left join parents_info par on (card.card_id = par.card_id) where card.card_id = ?";
             try (PreparedStatement st = conn.prepareStatement(findQuery)) {
                 st.setInt(1, searchByName.getCardId());
                 ResultSet rs = st.executeQuery();

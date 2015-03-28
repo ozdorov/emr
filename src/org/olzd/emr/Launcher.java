@@ -2,6 +2,7 @@ package org.olzd.emr;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.olzd.emr.reminder.BirthdayReminderTask;
 import org.olzd.emr.view.MainWindow;
 
 import javax.swing.*;
@@ -25,8 +26,8 @@ public class Launcher {
         });
         LOGGER.info("Application has been started");
 
-//        BirthdayReminderTask task = new BirthdayReminderTask();
-//        task.run();
+        BirthdayReminderTask task = new BirthdayReminderTask();
+        task.run();
 
 //        Scheduler scheduler = new Scheduler();
 //        BirthdayReminderTask birthTask = new BirthdayReminderTask();

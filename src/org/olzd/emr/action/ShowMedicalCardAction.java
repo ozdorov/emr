@@ -37,7 +37,7 @@ public class ShowMedicalCardAction extends AbstractAction {
 //        treeHelper.syncTreeWithCard(mainWindow.getCardStructureTree(), model.getCard());
 
         mainWindow.showMedicalCardPanel(true);
-        searchPopup.cleanupPopup();
+        //searchPopup.cleanupPopup();
         searchPopup.setVisible(false);
     }
 

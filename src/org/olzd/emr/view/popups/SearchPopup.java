@@ -36,11 +36,10 @@ public class SearchPopup extends JDialog {
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
 
-        JLabel nameLabel = new JLabel("Имя");
         JLabel surnameLabel = new JLabel("Фамилия");
 
         searchResultsList.setVisible(true);
-        searchResultsList.setVisibleRowCount(3);
+        searchResultsList.setVisibleRowCount(4);
         JScrollPane scrollPaneForList = new JScrollPane(searchResultsList);
 
         //create row and column for surname

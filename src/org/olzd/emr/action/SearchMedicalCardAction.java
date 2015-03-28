@@ -29,6 +29,7 @@ public class SearchMedicalCardAction extends AbstractAction {
         List<SearchResult> res = cardService.findMedicalCardByName(searchByNameModel);
 
         DefaultListModel<SearchResult> listModel = searchPopup.getSearchResultsModel();
+        listModel.clear();  //clear before each filling
         int counter = 0;
         for (SearchResult card : res) {
             listModel.add(counter++, card);
