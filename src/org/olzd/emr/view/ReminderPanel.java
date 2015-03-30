@@ -8,10 +8,10 @@ import java.util.List;
 public class ReminderPanel extends JPanel {
     private JLabel text = new JLabel();
 
-    public ReminderPanel(List<MedicalCard> cardsToRender) {
+    public ReminderPanel(String title, List<MedicalCard> cardsToRender) {
         setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createTitledBorder(
-                        "Именинники"),
+                        title),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
 

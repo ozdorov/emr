@@ -20,12 +20,17 @@ public class BirthdayReminderTask implements Runnable {
         RemindersService remindersService = new RemindersService();
         LocalDate currentDate = LocalDate.now();
         LOGGER.info("is launched for " + currentDate);
+
         List<MedicalCard> birthdayMen = remindersService.findCardsByBirthday(currentDate);
+        List<MedicalCard> closeExamDateMen = remindersService.findCardsByExamDate(currentDate);
         for (MedicalCard card : birthdayMen) {
-            LOGGER.debug("Selected card : " + card);
+            LOGGER.debug("Selected card with birthday : " + card);
         }
-        if (birthdayMen.isEmpty()) {
-            LOGGER.info("No cards were found");
+        for (MedicalCard card : closeExamDateMen) {
+            LOGGER.debug("Selected card with close exam date : " + card);
+        }
+
+        if (birthdayMen.isEmpty() && closeExamDateMen.isEmpty()) {
             return;
         }
 
@@ -36,7 +41,8 @@ public class BirthdayReminderTask implements Runnable {
                 window.getGraphicsConfiguration());
         final int taskBarSize = scnMax.bottom;
 
-        ReminderPanel reminderPanel = new ReminderPanel(birthdayMen);
+        ReminderPanel birthdayPanel = new ReminderPanel("Именинники", birthdayMen);
+        ReminderPanel examinationPanel = new ReminderPanel("Осмотры", closeExamDateMen);
 
         JButton closeButton = new JButton();
         closeButton.setAction(new AbstractAction() {
@@ -52,7 +58,9 @@ public class BirthdayReminderTask implements Runnable {
         BoxLayout boxLayout = new BoxLayout(container, BoxLayout.PAGE_AXIS);
 
         window.getContentPane().setLayout(boxLayout);
-        container.add(reminderPanel);
+        container.add(birthdayPanel);
+        container.add(Box.createRigidArea(new Dimension(0, 5)));
+        container.add(examinationPanel);
         container.add(Box.createRigidArea(new Dimension(0, 5)));
         container.add(closeButton);
 

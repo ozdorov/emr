@@ -8,6 +8,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RemindersService {
+    public List<MedicalCard> findCardsByExamDate(LocalDate date) {
+        List<MedicalCard> result = new ArrayList<>(3);
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+            String query = "select name, surname, contact_phone from medical_card "
+                    + "where datediff(next_exam_date, ?) <= 5";
+            PreparedStatement stat = conn.prepareStatement(query);
+            stat.setDate(1, new Date(date.toDate().getTime()));
+
+            ResultSet rs = stat.executeQuery();
+            while (rs.next()) {
+                MedicalCard card = new MedicalCard();
+                card.setName(rs.getString(1));
+                card.setSurname(rs.getString(2));
+                card.setContactPhone1(rs.getString(3));
+                result.add(card);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return result;
+    }
+
     public List<MedicalCard> findCardsByBirthday(LocalDate date) {
         List<MedicalCard> result = new ArrayList<>(3);
 
