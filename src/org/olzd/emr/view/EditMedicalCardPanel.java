@@ -20,6 +20,7 @@ public class EditMedicalCardPanel extends JPanel {
     private JFormattedTextField birthday = new JFormattedTextField();
     private JFormattedTextField dateOfNextExamination = new JFormattedTextField();
     private JTextField phoneNumber = new JTextField(16);
+    private JTextField phoneNumber2 = new JTextField(16);
     private JTextField email = new JTextField(20);
     private JTextArea address = new JTextArea(3, 20);
     private JTextArea mainDiagnosis = new JTextArea(3, 20);
@@ -67,7 +68,8 @@ public class EditMedicalCardPanel extends JPanel {
         JLabel surnameLabel = new JLabel("Фамилия");
         JLabel middleNameLabel = new JLabel("Отчество");
         JLabel birthdayLabel = new JLabel("Год рождения");
-        JLabel phoneNumberLabel = new JLabel("Контактный телефон");
+        JLabel phoneNumberLabel = new JLabel("Контактный телефон #1");
+        JLabel phoneNumberLabel2 = new JLabel("Контактный телефон #2");
         JLabel emailLabel = new JLabel("Адрес электронной почты");
         JLabel addressLabel = new JLabel("Адрес");
         JLabel nextExaminationLabel = new JLabel("Дата контрольного осмотра");
@@ -111,6 +113,9 @@ public class EditMedicalCardPanel extends JPanel {
         GroupLayout.SequentialGroup phoneNumRow = UIHelper.createFixedRowFromParams(layout, phoneNumberLabel, phoneNumber);
         GroupLayout.ParallelGroup phoneNumColumn = UIHelper.createFixedColumnFromParams(layout, phoneNumberLabel, phoneNumber);
 
+        GroupLayout.SequentialGroup phoneNum2Row = UIHelper.createFixedRowFromParams(layout, phoneNumberLabel2, phoneNumber2);
+        GroupLayout.ParallelGroup phoneNum2Column = UIHelper.createFixedColumnFromParams(layout, phoneNumberLabel2, phoneNumber2);
+
         GroupLayout.SequentialGroup addressRow = UIHelper.createFixedRowFromParams(layout, addressLabel, scrollPaneForAddress);
         GroupLayout.ParallelGroup addressColumn = UIHelper.createFixedColumnFromParams(layout, addressLabel, scrollPaneForAddress);
 
@@ -137,18 +142,20 @@ public class EditMedicalCardPanel extends JPanel {
 
         //todo add gap between text fields and [Save] button
         layout.setHorizontalGroup(layout.createParallelGroup().addGroup(nameRow).addGroup(surnameRow)
-                .addGroup(midNameRow).addGroup(birthdayRow).addGroup(emailRow).addGroup(phoneNumRow)
+                .addGroup(midNameRow).addGroup(birthdayRow).addGroup(emailRow).addGroup(phoneNumRow).addGroup(phoneNum2Row)
                 .addGroup(addressRow).addGroup(diagnosisRow).addGroup(relatedDiagnosisRow)
                 .addGroup(motherNameRow).addGroup(motherPhoneRow).addGroup(fatherNameRow).addGroup(fatherPhoneRow)
                 .addGroup(saveButtonRow));
         layout.setVerticalGroup(layout.createSequentialGroup().addGroup(nameColumn).addGroup(surnameColumn)
-                .addGroup(midNameColumn).addGroup(birthColumn).addGroup(emailColumn).addGroup(phoneNumColumn)
+                .addGroup(midNameColumn).addGroup(birthColumn).addGroup(emailColumn).addGroup(phoneNumColumn).addGroup(phoneNum2Column)
                 .addGroup(addressColumn).addGroup(diagnosisColumn).addGroup(relatedDiagnosisColumn)
                 .addGroup(motherNameColumn).addGroup(motherPhoneColumn).addGroup(fatherNameColumn).addGroup(fatherPhoneColumn)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(saveButtonColumn));
 
         layout.linkSize(SwingConstants.HORIZONTAL, nameLabel, surnameLabel, middleNameLabel,
-                birthdayLabel, phoneNumberLabel, emailLabel, addressLabel, mainDiagnosisLabel, relatedDiagnosisLabel,
+                birthdayLabel, phoneNumberLabel, phoneNumberLabel2, emailLabel, addressLabel,
+                mainDiagnosisLabel, relatedDiagnosisLabel,
                 motherNameLabel, fatherNameLabel, motherPhoneLabel, fatherPhoneLabel);
     }
 
@@ -158,6 +165,7 @@ public class EditMedicalCardPanel extends JPanel {
         surname.setDocument(cardModel.getSurnameDoc());
         birthday.setDocument(cardModel.getBirthdayDoc());
         phoneNumber.setDocument(cardModel.getContactPhoneDoc());
+        phoneNumber2.setDocument(cardModel.getContactPhone2Doc());
         email.setDocument(cardModel.getEmailDoc());
         address.setDocument(cardModel.getAddressDoc());
         middleName.setDocument(cardModel.getMiddleNameDoc());

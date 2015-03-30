@@ -5,6 +5,7 @@ import org.olzd.emr.entity.MedicalCard;
 import org.olzd.emr.model.MedicalCardModel;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultTreeModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -26,6 +27,9 @@ public class CardTreeRefresher implements PropertyChangeListener {
         if (model != null) {
             MedicalCard card = model.getCard();
             treeHelper.syncTreeWithCard(tree, card);
+        } else {
+            DefaultTreeModel tempModel = new DefaultTreeModel(null);
+            tree.setModel(tempModel);
         }
     }
 

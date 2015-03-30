@@ -76,8 +76,13 @@ public class MainWindow extends JFrame {
 
         ExitFromApplicationAction exitAction = new ExitFromApplicationAction();
         exitAction.putValue(Action.NAME, "Выход");
+
+        CloseCardAction closeCardAction = new CloseCardAction(this);
+        closeCardAction.putValue(Action.NAME, "Закрыть карточку");
+
         fileMenu.add(createCardItem);
         fileMenu.add(popupAction);
+        fileMenu.add(closeCardAction);
         fileMenu.addSeparator();
         fileMenu.add(exitAction);
 

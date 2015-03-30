@@ -29,7 +29,7 @@ public class BirthdayReminderTask implements Runnable {
             return;
         }
 
-        final JWindow window = new JWindow();
+        final JWindow window = new NotificationPopup();
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         final Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(
@@ -62,5 +62,16 @@ public class BirthdayReminderTask implements Runnable {
                 - window.getHeight());
 
         window.setVisible(true);
+    }
+
+    private class NotificationPopup extends JWindow {
+
+        @Override
+        public void paint(Graphics g) {
+            super.paint(g);
+            final Graphics2D g2d = (Graphics2D) g;
+            g2d.setColor(Color.BLACK);
+            g2d.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+        }
     }
 }

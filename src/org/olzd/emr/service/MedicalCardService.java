@@ -15,8 +15,8 @@ public class MedicalCardService {
     public MedicalCard loadMedicalCard(SearchResult searchByName) {
         MedicalCard card = new MedicalCard();
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
-            String findQuery = "select card.card_id, name, middle_name, surname, birthday, contact_phone, email, address, "
-                    + "diagnosis, related_diagnosis, next_exam_date, mother_name, mother_phone, father_name, father_phone "
+            String findQuery = "select card.card_id, name, middle_name, surname, birthday, contact_phone, contact_phone2, "
+                    + " email, address, diagnosis, related_diagnosis, next_exam_date, mother_name, mother_phone, father_name, father_phone "
                     + "from medical_card card left join parents_info par on (card.card_id = par.card_id) where card.card_id = ?";
             try (PreparedStatement st = conn.prepareStatement(findQuery)) {
                 st.setInt(1, searchByName.getCardId());
@@ -27,12 +27,13 @@ public class MedicalCardService {
                     card.setMiddleName(rs.getString(3));
                     card.setSurname(rs.getString(4));
                     card.setDateOfBirth(rs.getDate(5));
-                    card.setContactPhone(rs.getString(6));
-                    card.setEmail(rs.getString(7));
-                    card.setAddress(rs.getString(8));
-                    card.setMainDiagnosis(rs.getString(9));
-                    card.setRelatedDiagnosis(rs.getString(10));
-                    card.setDateOfNextExamination(rs.getDate(11));
+                    card.setContactPhone1(rs.getString(6));
+                    card.setContactPhone2(rs.getString(7));
+                    card.setEmail(rs.getString(8));
+                    card.setAddress(rs.getString(9));
+                    card.setMainDiagnosis(rs.getString(10));
+                    card.setRelatedDiagnosis(rs.getString(11));
+                    card.setDateOfNextExamination(rs.getDate(12));
 
                     card.setAnalysisAttachedFiles(findAllAttachedAnalysisFiles(card));
                     card.setTechExaminationAttachedFiles(findAllAttachedTechExamFiles(card));
@@ -74,7 +75,7 @@ public class MedicalCardService {
     public void updateMedicalCard(MedicalCard card) {
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
             String updateSql = new StringBuilder("update medical_card "
-                    + "set name = ?, middle_name = ?, surname = ?, birthday = ?, contact_phone = ?, "
+                    + "set name = ?, middle_name = ?, surname = ?, birthday = ?, contact_phone = ?, contact_phone2 = ?, "
                     + "email = ?, address = ?, diagnosis = ?, related_diagnosis = ?, next_exam_date = ?"
                     + " where card_id = ?").toString();
 
@@ -83,13 +84,14 @@ public class MedicalCardService {
                 statement.setString(2, card.getMiddleName());
                 statement.setString(3, card.getSurname());
                 statement.setDate(4, card.getDateOfBirth() != null ? new Date(card.getDateOfBirth().getTime()) : null);
-                statement.setString(5, card.getContactPhone());
-                statement.setString(6, card.getEmail());
-                statement.setString(7, card.getAddress());
-                statement.setString(8, card.getMainDiagnosis());
-                statement.setString(9, card.getRelatedDiagnosis());
-                statement.setDate(10, card.getDateOfNextExamination() != null ? new Date(card.getDateOfNextExamination().getTime()) : null);
-                statement.setInt(11, card.getCardId());
+                statement.setString(5, card.getContactPhone1());
+                statement.setString(6, card.getContactPhone2());
+                statement.setString(7, card.getEmail());
+                statement.setString(8, card.getAddress());
+                statement.setString(9, card.getMainDiagnosis());
+                statement.setString(10, card.getRelatedDiagnosis());
+                statement.setDate(11, card.getDateOfNextExamination() != null ? new Date(card.getDateOfNextExamination().getTime()) : null);
+                statement.setInt(12, card.getCardId());
                 statement.execute();
             } catch (SQLException e) {
                 System.out.println(e);
@@ -103,21 +105,23 @@ public class MedicalCardService {
 
     public void createMedicalCard(MedicalCard card) {
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
-            String insertSQL = new StringBuilder("insert into medical_card" +
-                    "(name, middle_name, surname, birthday, contact_phone, email, address, diagnosis, related_diagnosis, next_exam_date)" +
-                    " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)").toString();
+            String insertSQL = new StringBuilder("insert into medical_card"
+                    + "(name, middle_name, surname, birthday, contact_phone, contact_phone2,"
+                    + "email, address, diagnosis, related_diagnosis, next_exam_date)"
+                    + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)").toString();
 
             try (PreparedStatement statement = conn.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
                 statement.setString(1, card.getName());
                 statement.setString(2, card.getMiddleName());
                 statement.setString(3, card.getSurname());
                 statement.setDate(4, card.getDateOfBirth() != null ? new Date(card.getDateOfBirth().getTime()) : null);
-                statement.setString(5, card.getContactPhone());
-                statement.setString(6, card.getEmail());
-                statement.setString(7, card.getAddress());
-                statement.setString(8, card.getMainDiagnosis());
-                statement.setString(9, card.getRelatedDiagnosis());
-                statement.setDate(10, card.getDateOfNextExamination() != null ? new Date(card.getDateOfNextExamination().getTime()) : null);
+                statement.setString(5, card.getContactPhone1());
+                statement.setString(6, card.getContactPhone2());
+                statement.setString(7, card.getEmail());
+                statement.setString(8, card.getAddress());
+                statement.setString(9, card.getMainDiagnosis());
+                statement.setString(10, card.getRelatedDiagnosis());
+                statement.setDate(11, card.getDateOfNextExamination() != null ? new Date(card.getDateOfNextExamination().getTime()) : null);
                 statement.execute();
                 int generatedId;
                 ResultSet rs = statement.getGeneratedKeys();
@@ -138,7 +142,7 @@ public class MedicalCardService {
     public void saveAnalysisFile(MedicalCard card, AttachedFileWrapper analysisFile) {
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
             String insertSQL = new StringBuilder("insert into analysis_docs" +
-                    "(card_id, analysis_group, analysis_doc_location) values (?, ?, ?)").toString();
+                    "(card_id, analysis_group, file_location) values (?, ?, ?)").toString();
             try (PreparedStatement statement = conn.prepareStatement(insertSQL)) {
                 statement.setInt(1, card.getCardId());
                 statement.setString(2, analysisFile.getGroupName());
@@ -168,7 +172,7 @@ public class MedicalCardService {
     public List<AttachedFileWrapper> findAllAttachedAnalysisFiles(MedicalCard card) {
         List<AttachedFileWrapper> result = new ArrayList<>(5);
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
-            String insertSQL = new StringBuilder("select analysis_group, analysis_doc_location from analysis_docs" +
+            String insertSQL = new StringBuilder("select analysis_group, file_location from analysis_docs" +
                     " where card_id = ?").toString();
             try (PreparedStatement st = conn.prepareStatement(insertSQL)) {
                 st.setInt(1, card.getCardId());

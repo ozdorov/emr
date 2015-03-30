@@ -26,6 +26,10 @@ public class SearchMedicalCardAction extends AbstractAction {
         SearchByNameModel searchByNameModel = searchPopup.getSearchByNameModel();
 
         MedicalCardService cardService = new MedicalCardService();
+
+        if (searchByNameModel.getSurname() == null || searchByNameModel.getSurname().trim().isEmpty()) {
+            return;
+        }
         List<SearchResult> res = cardService.findMedicalCardByName(searchByNameModel);
 
         DefaultListModel<SearchResult> listModel = searchPopup.getSearchResultsModel();

@@ -23,7 +23,7 @@ public class RemindersService {
                 MedicalCard card = new MedicalCard();
                 card.setName(rs.getString(1));
                 card.setSurname(rs.getString(2));
-                card.setContactPhone(rs.getString(3));
+                card.setContactPhone1(rs.getString(3));
                 result.add(card);
             }
         } catch (SQLException e) {

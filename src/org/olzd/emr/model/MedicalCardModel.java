@@ -16,6 +16,7 @@ public class MedicalCardModel {
     private Document emailDoc = new PlainDocument();
     private Document addressDoc = new PlainDocument();
     private Document contactPhoneDoc = new PlainDocument();
+    private Document contactPhone2Doc = new PlainDocument();
     private Document diagnosisDoc = new PlainDocument();
     private Document relatedDiagnosisDoc = new PlainDocument();
     private Document nextExamDate = new PlainDocument();
@@ -31,7 +32,8 @@ public class MedicalCardModel {
         try {
             nameDoc.insertString(0, fromCard.getName(), null);
             surnameDoc.insertString(0, fromCard.getSurname(), null);
-            contactPhoneDoc.insertString(0, fromCard.getContactPhone(), null);
+            contactPhoneDoc.insertString(0, fromCard.getContactPhone1(), null);
+            contactPhone2Doc.insertString(0, fromCard.getContactPhone2(), null);
             birthdayDoc.insertString(0, UIHelper.formatDate(fromCard.getDateOfBirth()), null);
             middleNameDoc.insertString(0, fromCard.getMiddleName(), null);
             emailDoc.insertString(0, fromCard.getEmail(), null);
@@ -67,6 +69,10 @@ public class MedicalCardModel {
 
     public Document getContactPhoneDoc() {
         return contactPhoneDoc;
+    }
+
+    public Document getContactPhone2Doc() {
+        return contactPhone2Doc;
     }
 
     public Document getAddressDoc() {
@@ -115,7 +121,8 @@ public class MedicalCardModel {
             card.setDateOfBirth(UIHelper.parseDate(birthdayValue));
             card.setName(nameDoc.getText(0, nameDoc.getLength()));
             card.setSurname(surnameDoc.getText(0, surnameDoc.getLength()));
-            card.setContactPhone(contactPhoneDoc.getText(0, contactPhoneDoc.getLength()));
+            card.setContactPhone1(contactPhoneDoc.getText(0, contactPhoneDoc.getLength()));
+            card.setContactPhone2(contactPhone2Doc.getText(0, contactPhone2Doc.getLength()));
             card.setMiddleName(middleNameDoc.getText(0, middleNameDoc.getLength()));
             card.setAddress(addressDoc.getText(0, addressDoc.getLength()));
             card.setEmail(emailDoc.getText(0, emailDoc.getLength()));

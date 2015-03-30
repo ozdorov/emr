@@ -9,7 +9,8 @@ public class MedicalCard {
     private String middleName;
     private Date dateOfBirth;
     private Date dateOfNextExamination;
-    private String contactPhone;
+    private String contactPhone1;
+    private String contactPhone2;
     private String email;
     private String address;
     private String mainDiagnosis;
@@ -63,12 +64,20 @@ public class MedicalCard {
         this.cardId = cardId;
     }
 
-    public String getContactPhone() {
-        return contactPhone;
+    public String getContactPhone1() {
+        return contactPhone1;
     }
 
-    public void setContactPhone(String contactPhone) {
-        this.contactPhone = contactPhone;
+    public void setContactPhone1(String contactPhone) {
+        this.contactPhone1 = contactPhone;
+    }
+
+    public String getContactPhone2() {
+        return contactPhone2;
+    }
+
+    public void setContactPhone2(String contactPhone) {
+        this.contactPhone2 = contactPhone;
     }
 
     public String getMiddleName() {
