@@ -7,7 +7,6 @@ import org.olzd.emr.entity.ParentsInfo;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
-import java.text.ParseException;
 
 public class MedicalCardModel {
     private Document nameDoc = new PlainDocument();
@@ -129,7 +128,7 @@ public class MedicalCardModel {
             parentsInfo.setMotherPhone(motherPhoneDoc.getText(0, motherPhoneDoc.getLength()));
             parentsInfo.setFatherName(fatherNameDoc.getText(0, fatherNameDoc.getLength()));
             parentsInfo.setFatherPhone(fatherPhoneDoc.getText(0, fatherPhoneDoc.getLength()));
-        } catch (ParseException | BadLocationException e) {
+        } catch (BadLocationException e) {
             System.out.println(e);
         }
         return card;

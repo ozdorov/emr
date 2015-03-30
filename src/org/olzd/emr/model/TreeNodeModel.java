@@ -28,7 +28,7 @@ public class TreeNodeModel {
             return new StringBuilder(card.getSurname()).append(',').append(card.getName()).toString();
         } else if (nodeType == TreeNodeType.ANALYSIS_PLACEHOLDER) {
             return data.toString();
-        } else if (nodeType == TreeNodeType.ANALYSIS_FILE) {
+        } else if (nodeType == TreeNodeType.ANALYSIS_FILE || nodeType == TreeNodeType.TECH_EXAMINATION_FILE) {
             AttachedFileWrapper file = (AttachedFileWrapper) data;
             File f = new File(file.getPathToFile());
             return f.getName();
@@ -36,5 +36,13 @@ public class TreeNodeModel {
 
 
         return data.toString();
+    }
+
+    public TreeNodeType getTypeOfParent() {
+        return nodeType.getTypeOfParent();
+    }
+
+    public TreeNodeType getChildNodesType() {
+        return nodeType.getChildNodesType();
     }
 }

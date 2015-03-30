@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,24 +39,32 @@ public class TreeHelper {
         DefaultMutableTreeNode analysisPlaceholder = insertNewNode(tree, top, "Анализы", TreeNodeType.ANALYSIS_PLACEHOLDER, false);
         insertNewNode(tree, top, "Операции", TreeNodeType.SURGERY_PLACEHOLDER, false);
         insertNewNode(tree, top, "Осмотры", TreeNodeType.EXAMINATION_PLACEHOLDER, false);
-        insertNewNode(tree, top, "Инструментальные исследования", TreeNodeType.ANALYSIS_TYPE, false); //temp
+        DefaultMutableTreeNode techExamPlaceholder = insertNewNode(tree, top, "Инструментальные исследования", TreeNodeType.TECH_EXAMINATION_PLACEHOLDER, false);
 
         insertNewNode(tree, top, card, TreeNodeType.CARDNODE, false);
 
+        fillTreeWithAttachedFiles(tree, card.getAnalysisAttachedFiles(), analysisPlaceholder);
+        fillTreeWithAttachedFiles(tree, card.getTechExaminationFiles(), techExamPlaceholder);
+
+        tree.expandPath(new TreePath(top.getPath()));
+    }
+
+    private void fillTreeWithAttachedFiles(JTree tree, Collection<AttachedFileWrapper> attachedFiles, DefaultMutableTreeNode placeholder) {
         Map<String, DefaultMutableTreeNode> groupsToTreeNodes = new HashMap<>(4);
-        for (AttachedFileWrapper file : card.getAnalysisAttachedFiles()) {
+        for (AttachedFileWrapper file : attachedFiles) {
             groupsToTreeNodes.put(file.getGroupName(), null);
         }
+
+        TreeNodeModel phModel = (TreeNodeModel) placeholder.getUserObject();
+        TreeNodeType typeOfPHChildren = phModel.getChildNodesType();
         for (String groupName : groupsToTreeNodes.keySet()) {
-            DefaultMutableTreeNode newNode = insertNewNode(tree, analysisPlaceholder, groupName, TreeNodeType.ANALYSIS_TYPE, true);
+            DefaultMutableTreeNode newNode = insertNewNode(tree, placeholder, groupName, typeOfPHChildren, true);
             groupsToTreeNodes.put(groupName, newNode);
         }
 
-        for (AttachedFileWrapper file : card.getAnalysisAttachedFiles()) {
+        for (AttachedFileWrapper file : attachedFiles) {
             DefaultMutableTreeNode parentNode = groupsToTreeNodes.get(file.getGroupName());
-            insertNewNode(tree, parentNode, file, TreeNodeType.ANALYSIS_FILE, true);
+            insertNewNode(tree, parentNode, file, typeOfPHChildren.getChildNodesType(), true);
         }
-
-        tree.expandPath(new TreePath(top.getPath()));
     }
 }

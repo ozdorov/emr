@@ -35,6 +35,7 @@ public class MedicalCardService {
                     card.setDateOfNextExamination(rs.getDate(11));
 
                     card.setAnalysisAttachedFiles(findAllAttachedAnalysisFiles(card));
+                    card.setTechExaminationAttachedFiles(findAllAttachedTechExamFiles(card));
 
                     ParentsInfo parentsInfo = new ParentsInfo();
                     parentsInfo.setMotherName(rs.getString(12));
@@ -149,10 +150,43 @@ public class MedicalCardService {
         }
     }
 
+    public void saveTechExaminationFile(MedicalCard card, AttachedFileWrapper file) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+            String insertSQL = new StringBuilder("insert into tech_examination_docs" +
+                    "(card_id, examination_group, file_location) values (?, ?, ?)").toString();
+            try (PreparedStatement statement = conn.prepareStatement(insertSQL)) {
+                statement.setInt(1, card.getCardId());
+                statement.setString(2, file.getGroupName());
+                statement.setString(3, file.getPathToFile());
+                statement.execute();
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
     public List<AttachedFileWrapper> findAllAttachedAnalysisFiles(MedicalCard card) {
         List<AttachedFileWrapper> result = new ArrayList<>(5);
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
             String insertSQL = new StringBuilder("select analysis_group, analysis_doc_location from analysis_docs" +
+                    " where card_id = ?").toString();
+            try (PreparedStatement st = conn.prepareStatement(insertSQL)) {
+                st.setInt(1, card.getCardId());
+                ResultSet rs = st.executeQuery();
+                while (rs.next()) {
+                    result.add(new AttachedFileWrapper(rs.getString(2), rs.getString(1)));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return result;
+    }
+
+    public List<AttachedFileWrapper> findAllAttachedTechExamFiles(MedicalCard card) {
+        List<AttachedFileWrapper> result = new ArrayList<>(5);
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+            String insertSQL = new StringBuilder("select examination_group, file_location from tech_examination_docs" +
                     " where card_id = ?").toString();
             try (PreparedStatement st = conn.prepareStatement(insertSQL)) {
                 st.setInt(1, card.getCardId());

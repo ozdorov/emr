@@ -1,5 +1,6 @@
 package org.olzd.emr.action;
 
+import org.olzd.emr.StaticValues;
 import org.olzd.emr.TreeHelper;
 import org.olzd.emr.entity.AttachedFileWrapper;
 import org.olzd.emr.entity.MedicalCard;
@@ -33,7 +34,7 @@ public class AddAnalysisDocAction extends AbstractAction {
         fc.setMultiSelectionEnabled(false);
         int returnVal = fc.showDialog(tree.getParent(), "Прикрепить");
 
-        TreeNodeModel model = (TreeNodeModel) getValue("clickedTreeNodeModel");
+        TreeNodeModel model = (TreeNodeModel) getValue(StaticValues.MODEL_OF_CLICKED_TREE_NODE_KEY);
 
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             return;
@@ -41,27 +42,37 @@ public class AddAnalysisDocAction extends AbstractAction {
 
         MedicalCard card = ((MedicalCardTreeModel) tree.getModel()).getCard();
         DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) tree.getModel().getRoot();
+        TreeNodeType typeOfParentNode = model.getTypeOfParent();
+        TreeNodeType typeOfChildNode = model.getChildNodesType();
+//        String pathToSave = model.getPathToSave();
 
         for (int i = 0; i < rootNode.getChildCount(); i++) {
             DefaultMutableTreeNode nextNode = (DefaultMutableTreeNode) rootNode.getChildAt(i);
             TreeNodeModel nodeModel = (TreeNodeModel) nextNode.getUserObject();
-            if (nodeModel.getNodeType() == TreeNodeType.ANALYSIS_PLACEHOLDER) {
+            if (nodeModel.getNodeType() == typeOfParentNode) {
                 for (int y = 0; y < nextNode.getChildCount(); y++) {
                     DefaultMutableTreeNode analysisGroup = (DefaultMutableTreeNode) nextNode.getChildAt(y);
                     TreeNodeModel analysisModel = (TreeNodeModel) analysisGroup.getUserObject();
 
                     if (analysisModel.toString().equals(model.toString())) {
                         String subgroupName = analysisModel.toString();
+
                         String pathToFile = copySelectedFileToInnerDirectory(fc.getSelectedFile(), subgroupName);
                         AttachedFileWrapper fileWrapper =
                                 new AttachedFileWrapper(pathToFile, analysisModel.toString());
 
                         TreeHelper treeHelper = new TreeHelper();
-                        treeHelper.insertNewNode(tree, analysisGroup, fileWrapper, TreeNodeType.ANALYSIS_FILE, true);
+                        treeHelper.insertNewNode(tree, analysisGroup, fileWrapper, typeOfChildNode, true);
 
-                        card.addNewAnalysisAttachedFile(fileWrapper);
                         MedicalCardService medicalCardService = new MedicalCardService();
-                        medicalCardService.saveAnalysisFile(card, fileWrapper);
+                        if (TreeNodeType.ANALYSIS_FILE == typeOfChildNode) {
+                            card.addNewAnalysisAttachedFile(fileWrapper);
+                            medicalCardService.saveAnalysisFile(card, fileWrapper);
+                        } else if (TreeNodeType.TECH_EXAMINATION_FILE == typeOfChildNode) {
+                            card.addNewTechExaminationFile(fileWrapper);
+                            medicalCardService.saveTechExaminationFile(card, fileWrapper);
+                        }
+
                         return;
                     }
                 }

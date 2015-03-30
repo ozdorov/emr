@@ -115,6 +115,18 @@ public class MedicalCard {
         analysisAttachedFiles = new ArrayList<>(attachedFiles);
     }
 
+    public void addNewTechExaminationFile(AttachedFileWrapper fileWrapper) {
+        techExaminationAttachedFiles.add(fileWrapper);
+    }
+
+    public void setTechExaminationAttachedFiles(List<AttachedFileWrapper> attachedFiles) {
+        techExaminationAttachedFiles = new ArrayList<>(attachedFiles);
+    }
+
+    public Collection<AttachedFileWrapper> getTechExaminationFiles() {
+        return Collections.unmodifiableCollection(techExaminationAttachedFiles);
+    }
+
     public String getMainDiagnosis() {
         return mainDiagnosis;
     }
@@ -140,5 +152,14 @@ public class MedicalCard {
 
     public void setParentsInfo(ParentsInfo parentsInfo) {
         this.parentsInfo = parentsInfo;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("MedicalCard: [Card Id]=").append(cardId).append(", [Surname]=").append(surname)
+                .append(", [Name]=").append(name).append(", [Date of Birthday]=").append(dateOfBirth);
+
+        return result.toString();
     }
 }

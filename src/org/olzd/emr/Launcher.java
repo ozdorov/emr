@@ -1,7 +1,9 @@
 package org.olzd.emr;
 
+import it.sauronsoftware.cron4j.Scheduler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joda.time.LocalTime;
 import org.olzd.emr.reminder.BirthdayReminderTask;
 import org.olzd.emr.view.MainWindow;
 
@@ -12,6 +14,7 @@ import java.awt.event.ActionListener;
 
 public class Launcher {
     private static final Logger LOGGER = LogManager.getLogger(Launcher.class.getName());
+    private static final LocalTime CHECK_TIME = new LocalTime(9, 30);
 
     public static void main(String[] args) {
         setWindowsLookAndFeel();
@@ -26,14 +29,18 @@ public class Launcher {
         });
         LOGGER.info("Application has been started");
 
-        BirthdayReminderTask task = new BirthdayReminderTask();
-        task.run();
-
-//        Scheduler scheduler = new Scheduler();
-//        BirthdayReminderTask birthTask = new BirthdayReminderTask();
-//        scheduler.schedule("* * * * *", birthTask);
-//        //9 30 * * * [every day at 9 30]
-//        scheduler.start();
+        Scheduler scheduler = new Scheduler();
+        BirthdayReminderTask birthTask = new BirthdayReminderTask();
+        StringBuilder patternString = new StringBuilder();
+        patternString.append(CHECK_TIME.getMinuteOfHour()).append(" ").append(CHECK_TIME.getHourOfDay()).append(" * * *");
+        scheduler.schedule(patternString.toString(), birthTask);
+        //30 9 * * * [every day at 9 30]
+        scheduler.start();
+        //if time of launching had been passed, force check
+        if (LocalTime.now().isAfter(CHECK_TIME)) {
+            LOGGER.info("Force check after application has been launched");
+            birthTask.run();
+        }
         //think about error handling and error logging
     }
 

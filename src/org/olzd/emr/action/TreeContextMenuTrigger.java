@@ -105,7 +105,7 @@ public class TreeContextMenuTrigger extends MouseAdapter {
                     continue;
                 }
                 menuItem.setEnabled(availableCommands.contains(curCommand));
-                menuItem.getAction().putValue("clickedTreeNodeModel", treeNodeModel);
+                menuItem.getAction().putValue(StaticValues.MODEL_OF_CLICKED_TREE_NODE_KEY, treeNodeModel);
             }
         }
     }

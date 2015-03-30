@@ -17,11 +17,25 @@ public class BirthdayReminderTask implements Runnable {
 
     @Override
     public void run() {
-        LOGGER.info("Birthday Reminder works");
         RemindersService remindersService = new RemindersService();
-        List<MedicalCard> birthdayMen = remindersService.findCardsByBirthday(LocalDate.now());
+        LocalDate currentDate = LocalDate.now();
+        LOGGER.info("is launched for " + currentDate);
+        List<MedicalCard> birthdayMen = remindersService.findCardsByBirthday(currentDate);
+        for (MedicalCard card : birthdayMen) {
+            LOGGER.debug("Selected card : " + card);
+        }
+        if (birthdayMen.isEmpty()) {
+            LOGGER.info("No cards were found");
+            return;
+        }
 
         final JWindow window = new JWindow();
+        final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        final Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(
+                window.getGraphicsConfiguration());
+        final int taskBarSize = scnMax.bottom;
+
         ReminderPanel reminderPanel = new ReminderPanel(birthdayMen);
 
         JButton closeButton = new JButton();
@@ -41,8 +55,12 @@ public class BirthdayReminderTask implements Runnable {
         container.add(reminderPanel);
         container.add(Box.createRigidArea(new Dimension(0, 5)));
         container.add(closeButton);
+
         window.setAlwaysOnTop(true);
         window.pack();
+        window.setLocation(screenSize.width - window.getWidth(), screenSize.height - taskBarSize// *3
+                - window.getHeight());
+
         window.setVisible(true);
     }
 }

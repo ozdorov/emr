@@ -50,9 +50,9 @@ public class MainWindow extends JFrame {
 
     private JPopupMenu constructTreePopupMenu() {
         AddAnalysisGroupAction addAnalysisGroup = new AddAnalysisGroupAction(cardStructureTree, "Добавить группу для результатов");
-        addAnalysisGroup.putValue("command", ContextMenuCommand.ADD_ANALYSIS_GROUP);
+        addAnalysisGroup.putValue("command", ContextMenuCommand.ADD_ATTACHMENT_GROUP);
         AddAnalysisDocAction addAnalysisDoc = new AddAnalysisDocAction(cardStructureTree, "Добавить файл");
-        addAnalysisDoc.putValue("command", ContextMenuCommand.ADD_ANALYSIS_DOC);
+        addAnalysisDoc.putValue("command", ContextMenuCommand.ADD_ATTACHMENT_FILE);
         JMenuItem removeItem = new JMenuItem("Удалить группу");
         treeContextMenu.add(addAnalysisGroup);
         treeContextMenu.add(addAnalysisDoc);
@@ -133,7 +133,8 @@ public class MainWindow extends JFrame {
             TreeNodeModel nodeModel = (TreeNodeModel) treeNode.getUserObject();
             TreeNodeType nodeType = nodeModel.getNodeType();
             if (nodeType == TreeNodeType.ANALYSIS_PLACEHOLDER || nodeType == TreeNodeType.ANALYSIS_TYPE
-                    || nodeType == TreeNodeType.SURGERY_PLACEHOLDER || nodeType == TreeNodeType.EXAMINATION_PLACEHOLDER) {
+                    || nodeType == TreeNodeType.SURGERY_PLACEHOLDER || nodeType == TreeNodeType.EXAMINATION_PLACEHOLDER
+                    || nodeType == TreeNodeType.TECH_EXAMINATION_PLACEHOLDER || nodeType == TreeNodeType.TECH_EXAMINATION_TYPE) {
                 setIcon(getDefaultOpenIcon());
             }
 

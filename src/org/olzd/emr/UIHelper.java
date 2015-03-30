@@ -30,9 +30,13 @@ public class UIHelper {
         return new SimpleDateFormat("dd/MM/yyyy").format(date);
     }
 
-    public static Date parseDate(String stringDate) throws ParseException {
+    public static Date parseDate(String stringDate) {
         if (stringDate != null && !stringDate.isEmpty()) {
-            return new SimpleDateFormat("dd/MM/yyyy").parse(stringDate);
+            try {
+                return new SimpleDateFormat("dd/MM/yyyy").parse(stringDate);
+            } catch (ParseException e) {
+                return null;
+            }
         }
         return null;
     }
