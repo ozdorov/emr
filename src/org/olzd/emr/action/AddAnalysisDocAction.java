@@ -20,7 +20,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 public class AddAnalysisDocAction extends AbstractAction {
-    private static final String ATTACHED_ANALYSIS_DIRECTORY = "docs/analysis";
+    public static final String FILES_ROOT_DIR = "files/";
     private JTree tree;
 
     public AddAnalysisDocAction(JTree tree, String label) {
@@ -44,6 +44,7 @@ public class AddAnalysisDocAction extends AbstractAction {
         DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) tree.getModel().getRoot();
         TreeNodeType typeOfParentNode = model.getTypeOfParent();
         TreeNodeType typeOfChildNode = model.getChildNodesType();
+        TreeHelper treeHelper = new TreeHelper();
 //        String pathToSave = model.getPathToSave();
 
         for (int i = 0; i < rootNode.getChildCount(); i++) {
@@ -57,20 +58,20 @@ public class AddAnalysisDocAction extends AbstractAction {
                     if (analysisModel.toString().equals(model.toString())) {
                         String subgroupName = analysisModel.toString();
 
-                        String pathToFile = copySelectedFileToInnerDirectory(fc.getSelectedFile(), subgroupName);
+                        String path = definePathForAttachment(typeOfChildNode, subgroupName);
+                        String fullPathToFile = copySelectedFileToInnerDirectory(fc.getSelectedFile(), path);
                         AttachedFileWrapper fileWrapper =
-                                new AttachedFileWrapper(pathToFile, analysisModel.toString());
+                                new AttachedFileWrapper(fullPathToFile, analysisModel.toString());
 
-                        TreeHelper treeHelper = new TreeHelper();
                         treeHelper.insertNewNode(tree, analysisGroup, fileWrapper, typeOfChildNode, true);
 
                         MedicalCardService medicalCardService = new MedicalCardService();
                         if (TreeNodeType.ANALYSIS_FILE == typeOfChildNode) {
                             card.addNewAnalysisAttachedFile(fileWrapper);
-                            medicalCardService.saveAnalysisFile(card, fileWrapper);
+                            medicalCardService.saveAnalysisFileRecord(card, fileWrapper);
                         } else if (TreeNodeType.TECH_EXAMINATION_FILE == typeOfChildNode) {
                             card.addNewTechExaminationFile(fileWrapper);
-                            medicalCardService.saveTechExaminationFile(card, fileWrapper);
+                            medicalCardService.saveTechExaminationFileRecord(card, fileWrapper);
                         }
 
                         return;
@@ -80,12 +81,21 @@ public class AddAnalysisDocAction extends AbstractAction {
         }
     }
 
-    protected String copySelectedFileToInnerDirectory(File file, String subgroupName) {
+    protected String definePathForAttachment(TreeNodeType typeOfAttachment, String subgroupName) {
+        if (TreeNodeType.TECH_EXAMINATION_FILE == typeOfAttachment) {
+            return FILES_ROOT_DIR + "tech_exam/" + subgroupName;
+        } else if (TreeNodeType.ANALYSIS_FILE == typeOfAttachment) {
+            return FILES_ROOT_DIR + "analysis/" + subgroupName;
+        }
+        return FILES_ROOT_DIR + "others/";
+    }
+
+    protected String copySelectedFileToInnerDirectory(File file, String path) {
         String resultPath = null;
         try {
-            Path destDir = Paths.get("").toAbsolutePath().resolve(ATTACHED_ANALYSIS_DIRECTORY).resolve(subgroupName);
+            Path destDir = Paths.get("").toAbsolutePath().resolve(path);
             if (!Files.exists(destDir)) {
-                Files.createDirectory(destDir);
+                Files.createDirectories(destDir);
             }
             resultPath = Files.copy(file.toPath(), destDir.resolve(file.getName()), StandardCopyOption.REPLACE_EXISTING).toString();
         } catch (IOException e1) {
