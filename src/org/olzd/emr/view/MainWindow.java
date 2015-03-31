@@ -29,7 +29,8 @@ public class MainWindow extends JFrame {
 
         setExtendedState(MAXIMIZED_BOTH);
         //TODO temp, until system tray is implemented
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        //setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
     }
 
@@ -54,8 +55,12 @@ public class MainWindow extends JFrame {
         AddAnalysisDocAction addAnalysisDoc = new AddAnalysisDocAction(cardStructureTree, "Добавить файл");
         addAnalysisDoc.putValue("command", ContextMenuCommand.ADD_ATTACHMENT_FILE);
         JMenuItem removeItem = new JMenuItem("Удалить группу");
+        AddExaminationSheetAction addExamSheet = new AddExaminationSheetAction(this, "Добавить осмотр");
+        addExamSheet.putValue("command", ContextMenuCommand.ADD_EXAMINATION_SHEET);
+
         treeContextMenu.add(addAnalysisGroup);
         treeContextMenu.add(addAnalysisDoc);
+        treeContextMenu.add(addExamSheet);
         treeContextMenu.add(removeItem);
 
         return treeContextMenu;

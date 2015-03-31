@@ -139,7 +139,7 @@ public class MedicalCardService {
         }
     }
 
-    public void saveAnalysisFile(MedicalCard card, AttachedFileWrapper analysisFile) {
+    public void saveAnalysisFileRecord(MedicalCard card, AttachedFileWrapper analysisFile) {
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
             String insertSQL = new StringBuilder("insert into analysis_docs" +
                     "(card_id, analysis_group, file_location) values (?, ?, ?)").toString();
@@ -154,7 +154,7 @@ public class MedicalCardService {
         }
     }
 
-    public void saveTechExaminationFile(MedicalCard card, AttachedFileWrapper file) {
+    public void saveTechExaminationFileRecord(MedicalCard card, AttachedFileWrapper file) {
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
             String insertSQL = new StringBuilder("insert into tech_examination_docs" +
                     "(card_id, examination_group, file_location) values (?, ?, ?)").toString();
