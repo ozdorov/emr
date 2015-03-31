@@ -12,6 +12,17 @@ public enum TreeNodeType {
             return null;
         }
     },
+    EXAMINATION_SHEET {
+        @Override
+        public TreeNodeType getTypeOfParent() {
+            return EXAMINATION_PLACEHOLDER;
+        }
+
+        @Override
+        public TreeNodeType getChildNodesType() {
+            return null;
+        }
+    },
     ANALYSIS_PLACEHOLDER {
         @Override
         public TreeNodeType getTypeOfParent() {
