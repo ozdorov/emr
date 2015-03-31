@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 public class Launcher {
     private static final Logger LOGGER = LogManager.getLogger(Launcher.class.getName());
@@ -54,14 +55,14 @@ public class Launcher {
 
     private static void addTrayIcon(final JFrame mainWindow) {
         PopupMenu popupMenu = new PopupMenu();
-        MenuItem exitItem = new MenuItem("Выход");
+        MenuItem exitItem = new MenuItem("Exit");
         exitItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
-        MenuItem showWindowItem = new MenuItem("Показать");
+        MenuItem showWindowItem = new MenuItem("Show window");
         showWindowItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -72,7 +73,9 @@ public class Launcher {
         popupMenu.add(exitItem);
 
         SystemTray tray = SystemTray.getSystemTray();
-        ImageIcon icon = new ImageIcon("src/bulb.gif");
+        URL bufferedImage = ClassLoader.getSystemResource("bulb.gif");
+        ImageIcon icon = new ImageIcon(bufferedImage);
+
         TrayIcon trayIcon = new TrayIcon(icon.getImage());
         try {
             tray.add(trayIcon);
