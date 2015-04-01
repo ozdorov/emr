@@ -14,7 +14,7 @@ public class StaticValues {
     static {
         contextMenuMapping.put(TreeNodeType.ANALYSIS_PLACEHOLDER, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_GROUP));
         contextMenuMapping.put(TreeNodeType.ANALYSIS_TYPE, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_FILE));
-        //contextMenuMapping.put(TreeNodeType.SURGERY_PLACEHOLDER, Arrays.asList(ContextMenuCommand.ADD_SURGERY_DOC));
+        contextMenuMapping.put(TreeNodeType.SURGERY_PLACEHOLDER, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_FILE));
         contextMenuMapping.put(TreeNodeType.TECH_EXAMINATION_PLACEHOLDER, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_GROUP));
         contextMenuMapping.put(TreeNodeType.TECH_EXAMINATION_TYPE, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_FILE));
         contextMenuMapping.put(TreeNodeType.EXAMINATION_PLACEHOLDER, Arrays.asList(ContextMenuCommand.ADD_EXAMINATION_SHEET));

@@ -18,6 +18,7 @@ public class MedicalCard {
     private ParentsInfo parentsInfo;
     private List<AttachedFileWrapper> analysisAttachedFiles = new ArrayList<>(5);
     private List<AttachedFileWrapper> techExaminationAttachedFiles = new ArrayList<>(5);
+    private List<AttachedFileWrapper> surgeriesFiles = new ArrayList<>(5);
     private boolean wasModified;
 
     public String getName() {
@@ -161,6 +162,18 @@ public class MedicalCard {
 
     public void setParentsInfo(ParentsInfo parentsInfo) {
         this.parentsInfo = parentsInfo;
+    }
+
+    public List<AttachedFileWrapper> getSurgeriesFiles() {
+        return Collections.unmodifiableList(surgeriesFiles);
+    }
+
+    public void setSurgeriesFiles(List<AttachedFileWrapper> surgeriesFiles) {
+        this.surgeriesFiles = surgeriesFiles;
+    }
+
+    public void addSurgeryFile(AttachedFileWrapper fileWrapper) {
+        surgeriesFiles.add(fileWrapper);
     }
 
     @Override

@@ -68,7 +68,8 @@ public class TreeContextMenuTrigger extends MouseAdapter {
                 }
                 //try to identify somehow else that this is a file
                 if (model.getNodeType() == TreeNodeType.ANALYSIS_FILE
-                        || model.getNodeType() == TreeNodeType.TECH_EXAMINATION_FILE) {
+                        || model.getNodeType() == TreeNodeType.TECH_EXAMINATION_FILE
+                        || model.getNodeType() == TreeNodeType.SURGERY_FILE) {
                     AttachedFileWrapper fileWrapper = (AttachedFileWrapper) model.getData();
                     File f = new File(fileWrapper.getPathToFile());
                     openAttachedFile(f);

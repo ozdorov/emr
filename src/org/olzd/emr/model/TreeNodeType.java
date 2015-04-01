@@ -37,18 +37,18 @@ public enum TreeNodeType {
     SURGERY_PLACEHOLDER {
         @Override
         public TreeNodeType getTypeOfParent() {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
+            return null;
         }
 
         @Override
         public TreeNodeType getChildNodesType() {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
+            return SURGERY_FILE;
         }
     },
     EXAMINATION_PLACEHOLDER {
         @Override
         public TreeNodeType getTypeOfParent() {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
+            return null;
         }
 
         @Override
@@ -104,6 +104,17 @@ public enum TreeNodeType {
         @Override
         public TreeNodeType getTypeOfParent() {
             return ANALYSIS_TYPE;
+        }
+
+        @Override
+        public TreeNodeType getChildNodesType() {
+            return null;
+        }
+    },
+    SURGERY_FILE {
+        @Override
+        public TreeNodeType getTypeOfParent() {
+            return SURGERY_PLACEHOLDER;
         }
 
         @Override

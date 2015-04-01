@@ -28,7 +28,9 @@ public class TreeNodeModel {
             return new StringBuilder(card.getSurname()).append(',').append(card.getName()).toString();
         } else if (nodeType == TreeNodeType.ANALYSIS_PLACEHOLDER) {
             return data.toString();
-        } else if (nodeType == TreeNodeType.ANALYSIS_FILE || nodeType == TreeNodeType.TECH_EXAMINATION_FILE) {
+        } else if (nodeType == TreeNodeType.ANALYSIS_FILE
+                || nodeType == TreeNodeType.TECH_EXAMINATION_FILE
+                || nodeType == TreeNodeType.SURGERY_FILE) {
             AttachedFileWrapper file = (AttachedFileWrapper) data;
             File f = new File(file.getPathToFile());
             return f.getName();

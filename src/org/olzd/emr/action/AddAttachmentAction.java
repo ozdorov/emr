@@ -20,11 +20,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-public class AddAnalysisDocAction extends AbstractAction {
+public class AddAttachmentAction extends AbstractAction {
     public static final String FILES_ROOT_DIR = "files/";
     private JTree tree;
 
-    public AddAnalysisDocAction(JTree tree, String label) {
+    public AddAttachmentAction(JTree tree, String label) {
         super(label);
         this.tree = tree;
     }
@@ -64,7 +64,10 @@ public class AddAnalysisDocAction extends AbstractAction {
             card.addNewTechExaminationFile(fileWrapper);
             medicalCardService.saveTechExaminationFileRecord(card, fileWrapper);
         }
-
+        if (TreeNodeType.SURGERY_FILE == typeOfChildNode) {
+            card.addSurgeryFile(fileWrapper);
+            medicalCardService.saveSurgeryAttachment(card, fileWrapper);
+        }
     }
 
     protected String definePathForAttachment(TreeNodeType typeOfAttachment, String subgroupName) {
@@ -72,6 +75,8 @@ public class AddAnalysisDocAction extends AbstractAction {
             return FILES_ROOT_DIR + "tech_exam/" + subgroupName;
         } else if (TreeNodeType.ANALYSIS_FILE == typeOfAttachment) {
             return FILES_ROOT_DIR + "analysis/" + subgroupName;
+        } else if (TreeNodeType.SURGERY_FILE == typeOfAttachment) {
+            return FILES_ROOT_DIR + "surgery/";
         }
         return FILES_ROOT_DIR + "others/";
     }

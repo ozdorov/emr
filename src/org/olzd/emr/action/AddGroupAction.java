@@ -10,10 +10,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.event.ActionEvent;
 
-public class AddAnalysisGroupAction extends AbstractAction {
+public class AddGroupAction extends AbstractAction {
     private JTree tree;
 
-    public AddAnalysisGroupAction(JTree tree, String label) {
+    public AddGroupAction(JTree tree, String label) {
         super(label);
         this.tree = tree;
     }

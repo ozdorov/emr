@@ -37,7 +37,7 @@ public class TreeHelper {
         treeModel.setRoot(top);
 
         DefaultMutableTreeNode analysisPlaceholder = insertNewNode(tree, top, "Анализы", TreeNodeType.ANALYSIS_PLACEHOLDER, false);
-        insertNewNode(tree, top, "Операции", TreeNodeType.SURGERY_PLACEHOLDER, false);
+        DefaultMutableTreeNode surgeriesPlaceholder = insertNewNode(tree, top, "Операции", TreeNodeType.SURGERY_PLACEHOLDER, false);
         insertNewNode(tree, top, "Осмотры", TreeNodeType.EXAMINATION_PLACEHOLDER, false);
         DefaultMutableTreeNode techExamPlaceholder = insertNewNode(tree, top, "Инструментальные исследования", TreeNodeType.TECH_EXAMINATION_PLACEHOLDER, false);
 
@@ -45,6 +45,7 @@ public class TreeHelper {
 
         fillTreeWithAttachedFiles(tree, card.getAnalysisAttachedFiles(), analysisPlaceholder);
         fillTreeWithAttachedFiles(tree, card.getTechExaminationFiles(), techExamPlaceholder);
+        fillTreeWithAttachedFiles(tree, card.getSurgeriesFiles(), surgeriesPlaceholder);
 
         tree.expandPath(new TreePath(top.getPath()));
     }
@@ -52,7 +53,9 @@ public class TreeHelper {
     private void fillTreeWithAttachedFiles(JTree tree, Collection<AttachedFileWrapper> attachedFiles, DefaultMutableTreeNode placeholder) {
         Map<String, DefaultMutableTreeNode> groupsToTreeNodes = new HashMap<>(4);
         for (AttachedFileWrapper file : attachedFiles) {
-            groupsToTreeNodes.put(file.getGroupName(), null);
+            if (file.getGroupName() != null) {
+                groupsToTreeNodes.put(file.getGroupName(), null);
+            }
         }
 
         TreeNodeModel phModel = (TreeNodeModel) placeholder.getUserObject();
@@ -64,7 +67,11 @@ public class TreeHelper {
 
         for (AttachedFileWrapper file : attachedFiles) {
             DefaultMutableTreeNode parentNode = groupsToTreeNodes.get(file.getGroupName());
-            insertNewNode(tree, parentNode, file, typeOfPHChildren.getChildNodesType(), true);
+            if (parentNode == null) {
+                insertNewNode(tree, placeholder, file, typeOfPHChildren, true);
+            } else {
+                insertNewNode(tree, parentNode, file, typeOfPHChildren.getChildNodesType(), true);
+            }
         }
     }
 }

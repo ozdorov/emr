@@ -37,6 +37,7 @@ public class MedicalCardService {
 
                     card.setAnalysisAttachedFiles(findAllAttachedAnalysisFiles(card));
                     card.setTechExaminationAttachedFiles(findAllAttachedTechExamFiles(card));
+                    card.setSurgeriesFiles(findAllSurgeryFiles(card));
 
                     ParentsInfo parentsInfo = new ParentsInfo();
                     parentsInfo.setMotherName(rs.getString(12));
@@ -60,6 +61,26 @@ public class MedicalCardService {
                     + " from medical_card where surname like concat(?, '%')";
             try (PreparedStatement st = conn.prepareStatement(findQuery)) {
                 st.setString(1, searchByName.getSurname());
+                ResultSet rs = st.executeQuery();
+                while (rs.next()) {
+                    res.add(new SearchResult(rs.getInt(1), rs.getString(2), rs.getString(3)));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return res;
+    }
+
+    public List<SearchResult> findExistingMedicalCard(String surname, String name) {
+        List<SearchResult> res = new ArrayList<>(3);
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+            String findQuery = "select card_id, name, surname"
+                    + " from medical_card where surname like ? and name like ?";
+            try (PreparedStatement st = conn.prepareStatement(findQuery)) {
+                st.setString(1, surname);
+                st.setString(2, name);
                 ResultSet rs = st.executeQuery();
                 while (rs.next()) {
                     res.add(new SearchResult(rs.getInt(1), rs.getString(2), rs.getString(3)));
@@ -226,5 +247,36 @@ public class MedicalCardService {
         } catch (SQLException ex) {
             System.out.println(ex);
         }
+    }
+
+    public void saveSurgeryAttachment(MedicalCard card, AttachedFileWrapper attachment) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+            String query = "insert into surgeries (card_id, file_location) values (?, ?)";
+            PreparedStatement stat = conn.prepareStatement(query);
+            stat.setInt(1, card.getCardId());
+            stat.setString(2, attachment.getPathToFile());
+            stat.execute();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public List<AttachedFileWrapper> findAllSurgeryFiles(MedicalCard card) {
+        List<AttachedFileWrapper> result = new ArrayList<>(5);
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+            String query = new StringBuilder("select file_location from surgeries" +
+                    " where card_id = ?").toString();
+            try (PreparedStatement st = conn.prepareStatement(query)) {
+                st.setInt(1, card.getCardId());
+                ResultSet rs = st.executeQuery();
+                while (rs.next()) {
+                    result.add(new AttachedFileWrapper(rs.getString(1), null));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return result;
     }
 }

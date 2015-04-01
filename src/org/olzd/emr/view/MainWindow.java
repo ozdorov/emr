@@ -50,9 +50,9 @@ public class MainWindow extends JFrame {
     }
 
     private JPopupMenu constructTreePopupMenu() {
-        AddAnalysisGroupAction addAnalysisGroup = new AddAnalysisGroupAction(cardStructureTree, "Добавить группу для результатов");
+        AddGroupAction addAnalysisGroup = new AddGroupAction(cardStructureTree, "Добавить группу для результатов");
         addAnalysisGroup.putValue("command", ContextMenuCommand.ADD_ATTACHMENT_GROUP);
-        AddAnalysisDocAction addAnalysisDoc = new AddAnalysisDocAction(cardStructureTree, "Добавить файл");
+        AddAttachmentAction addAnalysisDoc = new AddAttachmentAction(cardStructureTree, "Добавить файл");
         addAnalysisDoc.putValue("command", ContextMenuCommand.ADD_ATTACHMENT_FILE);
         JMenuItem removeItem = new JMenuItem("Удалить группу");
         AddExaminationSheetAction addExamSheet = new AddExaminationSheetAction(this, "Добавить осмотр");
