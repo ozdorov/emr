@@ -1,5 +1,8 @@
 package org.olzd.emr.action;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.FormattedMessage;
 import org.olzd.emr.StaticValues;
 import org.olzd.emr.entity.AttachedFileWrapper;
 import org.olzd.emr.model.ContextMenuCommand;
@@ -18,6 +21,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class TreeContextMenuTrigger extends MouseAdapter {
+    private static final Logger LOGGER = LogManager.getLogger(TreeContextMenuTrigger.class.getName());
     private JTree cardStructureTree;
     private JPopupMenu treeContextMenu;
 
@@ -81,7 +85,9 @@ public class TreeContextMenuTrigger extends MouseAdapter {
         try {
             Desktop.getDesktop().open(attachedFile);
         } catch (IOException e1) {
-            System.out.println(e1);
+            FormattedMessage message =
+                    new FormattedMessage("Error occured while trying to open file with name = {}", attachedFile.getAbsolutePath());
+            LOGGER.error(message, e1);
         }
     }
 
