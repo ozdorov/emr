@@ -25,4 +25,5 @@ public class StaticValues {
     }
 
     public static final String MODEL_OF_CLICKED_TREE_NODE_KEY = "clickedTreeNodeModel";
+    public static final String PATH_TO_CLICKED_TREE_NODE = "path2TreeNode";
 }

@@ -7,6 +7,7 @@ import org.olzd.emr.model.TreeNodeType;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.awt.event.ActionEvent;
 
 public class AddAnalysisGroupAction extends AbstractAction {
@@ -24,19 +25,13 @@ public class AddAnalysisGroupAction extends AbstractAction {
             return;
         }
 
-        TreeNodeModel model = (TreeNodeModel) getValue(StaticValues.MODEL_OF_CLICKED_TREE_NODE_KEY);
-        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) tree.getModel().getRoot();
+        TreePath path = (TreePath) getValue(StaticValues.PATH_TO_CLICKED_TREE_NODE);
+        DefaultMutableTreeNode clickedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+        TreeNodeModel nodeModel = (TreeNodeModel) clickedNode.getUserObject();
 
-        for (int i = 0; i < rootNode.getChildCount(); i++) {
-            DefaultMutableTreeNode nextNode = (DefaultMutableTreeNode) rootNode.getChildAt(i);
-            TreeNodeModel nodeModel = (TreeNodeModel) nextNode.getUserObject();
-            if (nodeModel.getNodeType() == model.getNodeType()) {
-
-                TreeHelper treeHelper = new TreeHelper();
-                TreeNodeType typeOfChild = nodeModel.getChildNodesType();
-                treeHelper.insertNewNode(tree, nextNode, groupName, typeOfChild, true);
-            }
-        }
+        TreeHelper treeHelper = new TreeHelper();
+        TreeNodeType typeOfChild = nodeModel.getChildNodesType();
+        treeHelper.insertNewNode(tree, clickedNode, groupName, typeOfChild, true);
 
     }
 }

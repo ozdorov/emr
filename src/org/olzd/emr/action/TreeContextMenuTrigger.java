@@ -47,7 +47,7 @@ public class TreeContextMenuTrigger extends MouseAdapter {
                 if (model == null) {
                     return;
                 }
-                updateMenuItemsVisibility(treeContextMenu, model);
+                updateMenuItemsVisibility(treeContextMenu, model, path);
                 treeContextMenu.show(cardStructureTree, x, y);
             }
         }
@@ -85,7 +85,7 @@ public class TreeContextMenuTrigger extends MouseAdapter {
         }
     }
 
-    protected void updateMenuItemsVisibility(JPopupMenu contextMenu, TreeNodeModel treeNodeModel) {
+    protected void updateMenuItemsVisibility(JPopupMenu contextMenu, TreeNodeModel treeNodeModel, TreePath path) {
         List<ContextMenuCommand> availableCommands = StaticValues.getAvailableCommandsList(treeNodeModel.getNodeType());
         MenuElement[] elements = contextMenu.getSubElements();
         for (MenuElement elem : elements) {
@@ -108,6 +108,7 @@ public class TreeContextMenuTrigger extends MouseAdapter {
                 }
                 menuItem.setEnabled(availableCommands.contains(curCommand));
                 menuItem.getAction().putValue(StaticValues.MODEL_OF_CLICKED_TREE_NODE_KEY, treeNodeModel);
+                menuItem.getAction().putValue(StaticValues.PATH_TO_CLICKED_TREE_NODE, path);
             }
         }
     }

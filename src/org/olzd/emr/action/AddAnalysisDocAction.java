@@ -11,6 +11,7 @@ import org.olzd.emr.service.MedicalCardService;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -34,51 +35,36 @@ public class AddAnalysisDocAction extends AbstractAction {
         fc.setMultiSelectionEnabled(false);
         int returnVal = fc.showDialog(tree.getParent(), "Прикрепить");
 
-        TreeNodeModel model = (TreeNodeModel) getValue(StaticValues.MODEL_OF_CLICKED_TREE_NODE_KEY);
+        TreePath pathToClickedNode = (TreePath) getValue(StaticValues.PATH_TO_CLICKED_TREE_NODE);
 
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             return;
         }
 
         MedicalCard card = ((MedicalCardTreeModel) tree.getModel()).getCard();
-        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) tree.getModel().getRoot();
-        TreeNodeType typeOfParentNode = model.getTypeOfParent();
-        TreeNodeType typeOfChildNode = model.getChildNodesType();
         TreeHelper treeHelper = new TreeHelper();
-//        String pathToSave = model.getPathToSave();
 
-        for (int i = 0; i < rootNode.getChildCount(); i++) {
-            DefaultMutableTreeNode nextNode = (DefaultMutableTreeNode) rootNode.getChildAt(i);
-            TreeNodeModel nodeModel = (TreeNodeModel) nextNode.getUserObject();
-            if (nodeModel.getNodeType() == typeOfParentNode) {
-                for (int y = 0; y < nextNode.getChildCount(); y++) {
-                    DefaultMutableTreeNode analysisGroup = (DefaultMutableTreeNode) nextNode.getChildAt(y);
-                    TreeNodeModel analysisModel = (TreeNodeModel) analysisGroup.getUserObject();
+        DefaultMutableTreeNode clickedNode = (DefaultMutableTreeNode) pathToClickedNode.getLastPathComponent();
+        TreeNodeModel clickedNodeModel = (TreeNodeModel) clickedNode.getUserObject();
+        TreeNodeType typeOfChildNode = clickedNodeModel.getChildNodesType();
+        String subgroupName = clickedNodeModel.toString();
+        String path = definePathForAttachment(typeOfChildNode, subgroupName);
+        String fullPathToFile = copySelectedFileToInnerDirectory(fc.getSelectedFile(), path);
 
-                    if (analysisModel.toString().equals(model.toString())) {
-                        String subgroupName = analysisModel.toString();
+        AttachedFileWrapper fileWrapper =
+                new AttachedFileWrapper(fullPathToFile, clickedNodeModel.toString());
 
-                        String path = definePathForAttachment(typeOfChildNode, subgroupName);
-                        String fullPathToFile = copySelectedFileToInnerDirectory(fc.getSelectedFile(), path);
-                        AttachedFileWrapper fileWrapper =
-                                new AttachedFileWrapper(fullPathToFile, analysisModel.toString());
+        treeHelper.insertNewNode(tree, clickedNode, fileWrapper, typeOfChildNode, true);
 
-                        treeHelper.insertNewNode(tree, analysisGroup, fileWrapper, typeOfChildNode, true);
-
-                        MedicalCardService medicalCardService = new MedicalCardService();
-                        if (TreeNodeType.ANALYSIS_FILE == typeOfChildNode) {
-                            card.addNewAnalysisAttachedFile(fileWrapper);
-                            medicalCardService.saveAnalysisFileRecord(card, fileWrapper);
-                        } else if (TreeNodeType.TECH_EXAMINATION_FILE == typeOfChildNode) {
-                            card.addNewTechExaminationFile(fileWrapper);
-                            medicalCardService.saveTechExaminationFileRecord(card, fileWrapper);
-                        }
-
-                        return;
-                    }
-                }
-            }
+        MedicalCardService medicalCardService = new MedicalCardService();
+        if (TreeNodeType.ANALYSIS_FILE == typeOfChildNode) {
+            card.addNewAnalysisAttachedFile(fileWrapper);
+            medicalCardService.saveAnalysisFileRecord(card, fileWrapper);
+        } else if (TreeNodeType.TECH_EXAMINATION_FILE == typeOfChildNode) {
+            card.addNewTechExaminationFile(fileWrapper);
+            medicalCardService.saveTechExaminationFileRecord(card, fileWrapper);
         }
+
     }
 
     protected String definePathForAttachment(TreeNodeType typeOfAttachment, String subgroupName) {
