@@ -1,5 +1,7 @@
 package org.olzd.emr.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.olzd.emr.entity.MedicalCard;
 
@@ -8,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RemindersService {
+    private static final Logger LOGGER = LogManager.getLogger(RemindersService.class.getName());
+
     public List<MedicalCard> findCardsByExamDate(LocalDate date) {
         List<MedicalCard> result = new ArrayList<>(3);
 
@@ -26,7 +30,7 @@ public class RemindersService {
                 result.add(card);
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            LOGGER.error("error", e);
         }
 
         return result;
@@ -51,7 +55,7 @@ public class RemindersService {
                 result.add(card);
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            LOGGER.error("Error", e);
         }
 
         return result;

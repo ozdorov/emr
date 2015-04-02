@@ -1,5 +1,7 @@
 package org.olzd.emr.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.olzd.emr.entity.AttachedFileWrapper;
 import org.olzd.emr.entity.MedicalCard;
 import org.olzd.emr.entity.ParentsInfo;
@@ -11,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MedicalCardService {
+    private static final Logger LOGGER = LogManager.getLogger(MedicalCardService.class.getName());
 
     public MedicalCard loadMedicalCard(SearchResult searchByName) {
         MedicalCard card = new MedicalCard();
@@ -48,7 +51,7 @@ public class MedicalCardService {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            LOGGER.error("Error while trying to load medical card", e);
         }
 
         return card;
@@ -67,7 +70,7 @@ public class MedicalCardService {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            LOGGER.error("Error while trying to find medical card by surname + = " + searchByName.getSurname(), e);
         }
 
         return res;
@@ -115,10 +118,10 @@ public class MedicalCardService {
                 statement.setInt(12, card.getCardId());
                 statement.execute();
             } catch (SQLException e) {
-                System.out.println(e);
+                LOGGER.error("Error", e);
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            LOGGER.error("Error while trying to update medical card with Id = " + card.getCardId(), e);
         }
 
         saveParentsInfo(card);
@@ -153,10 +156,10 @@ public class MedicalCardService {
                 saveParentsInfo(card);
 
             } catch (SQLException e) {
-                System.out.println(e);
+                LOGGER.error("Error", e);
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            LOGGER.error("Error while creating card with surname = " + card.getSurname(), e);
         }
     }
 
@@ -171,7 +174,7 @@ public class MedicalCardService {
                 statement.execute();
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            LOGGER.error("Error", e);
         }
     }
 
@@ -186,7 +189,7 @@ public class MedicalCardService {
                 statement.execute();
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            LOGGER.error("Error", e);
         }
     }
 
@@ -203,7 +206,7 @@ public class MedicalCardService {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            LOGGER.error(e);
         }
         return result;
     }
@@ -221,7 +224,7 @@ public class MedicalCardService {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            LOGGER.error("Error", e);
         }
         return result;
     }
@@ -245,7 +248,7 @@ public class MedicalCardService {
                 st.executeUpdate();
             }
         } catch (SQLException ex) {
-            System.out.println(ex);
+            LOGGER.error("Error", ex);
         }
     }
 
