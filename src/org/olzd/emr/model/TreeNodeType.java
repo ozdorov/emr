@@ -12,10 +12,21 @@ public enum TreeNodeType {
             return null;
         }
     },
-    EXAMINATION_SHEET {
+    EXAMINATION_TYPE {
         @Override
         public TreeNodeType getTypeOfParent() {
             return EXAMINATION_PLACEHOLDER;
+        }
+
+        @Override
+        public TreeNodeType getChildNodesType() {
+            return EXAMINATION_SHEET;
+        }
+    },
+    EXAMINATION_SHEET {
+        @Override
+        public TreeNodeType getTypeOfParent() {
+            return EXAMINATION_TYPE;
         }
 
         @Override
@@ -53,13 +64,13 @@ public enum TreeNodeType {
 
         @Override
         public TreeNodeType getChildNodesType() {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
+            return EXAMINATION_TYPE;
         }
     },
     TECH_EXAMINATION_PLACEHOLDER {
         @Override
         public TreeNodeType getTypeOfParent() {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
+            return null;
         }
 
         @Override

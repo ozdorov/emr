@@ -1,5 +1,8 @@
 package org.olzd.emr.action;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.FormattedMessage;
 import org.olzd.emr.StaticValues;
 import org.olzd.emr.TreeHelper;
 import org.olzd.emr.entity.AttachedFileWrapper;
@@ -21,6 +24,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 public class AddAttachmentAction extends AbstractAction {
+    private static final Logger LOGGER = LogManager.getLogger(AddAttachmentAction.class.getName());
     public static final String FILES_ROOT_DIR = "files/";
     private JTree tree;
 
@@ -90,8 +94,10 @@ public class AddAttachmentAction extends AbstractAction {
             }
             resultPath = Files.copy(file.toPath(), destDir.resolve(file.getName()), StandardCopyOption.REPLACE_EXISTING).toString();
         } catch (IOException e1) {
-            System.out.println(e1);
-            throw new RuntimeException(e1);
+            FormattedMessage message = new FormattedMessage("Error occured while trying to save attachment with name = {}" +
+                    " to directory = {}", file, path);
+            LOGGER.error(message, e1);
+            throw new RuntimeException("Ошибка сохранения файла", e1);
         } finally {
             return resultPath;
         }

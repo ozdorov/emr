@@ -5,10 +5,9 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
 import org.olzd.emr.StaticValues;
 import org.olzd.emr.entity.AttachedFileWrapper;
-import org.olzd.emr.model.ContextMenuCommand;
-import org.olzd.emr.model.MedicalCardTreeModel;
-import org.olzd.emr.model.TreeNodeModel;
-import org.olzd.emr.model.TreeNodeType;
+import org.olzd.emr.entity.ExaminationCard;
+import org.olzd.emr.model.*;
+import org.olzd.emr.view.MainWindow;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -24,9 +23,11 @@ public class TreeContextMenuTrigger extends MouseAdapter {
     private static final Logger LOGGER = LogManager.getLogger(TreeContextMenuTrigger.class.getName());
     private JTree cardStructureTree;
     private JPopupMenu treeContextMenu;
+    private MainWindow window;
 
-    public TreeContextMenuTrigger(JTree tree, JPopupMenu contextMenu) {
-        this.cardStructureTree = tree;
+    public TreeContextMenuTrigger(MainWindow mainWindow, JPopupMenu contextMenu) {
+        this.cardStructureTree = mainWindow.getCardStructureTree();
+        window = mainWindow;
         treeContextMenu = contextMenu;
     }
 
@@ -77,6 +78,14 @@ public class TreeContextMenuTrigger extends MouseAdapter {
                     AttachedFileWrapper fileWrapper = (AttachedFileWrapper) model.getData();
                     File f = new File(fileWrapper.getPathToFile());
                     openAttachedFile(f);
+                } else if (model.getNodeType() == TreeNodeType.CARDNODE) {
+                    //todo think about what to do when card is displayed and exam sheet becomes hidden
+                    window.showMedicalCardPanel(true);
+                } else if (model.getNodeType() == TreeNodeType.EXAMINATION_SHEET) {
+                    ExaminationCard card = (ExaminationCard) model.getData();
+                    ExaminationSheetModel examinationSheetModel = new ExaminationSheetModel(card);
+                    window.getExaminationPanel().injectModel(examinationSheetModel);
+                    window.getSplitPane().setRightComponent(window.getExaminationPanel());
                 }
             }
         }

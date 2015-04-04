@@ -45,23 +45,24 @@ public class MainWindow extends JFrame {
         cardStructureTree.setScrollsOnExpand(true);
         cardStructureTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-        cardStructureTree.addMouseListener(new TreeContextMenuTrigger(cardStructureTree, treeContextMenu));
+        cardStructureTree.addMouseListener(new TreeContextMenuTrigger(this, treeContextMenu));
         cardStructureTree.add(constructTreePopupMenu());
     }
 
     private JPopupMenu constructTreePopupMenu() {
-        AddGroupAction addAnalysisGroup = new AddGroupAction(cardStructureTree, "Добавить группу для результатов");
+        AddGroupAction addAnalysisGroup = new AddGroupAction(cardStructureTree, "Добавить группу");
         addAnalysisGroup.putValue("command", ContextMenuCommand.ADD_ATTACHMENT_GROUP);
         AddAttachmentAction addAnalysisDoc = new AddAttachmentAction(cardStructureTree, "Добавить файл");
         addAnalysisDoc.putValue("command", ContextMenuCommand.ADD_ATTACHMENT_FILE);
-        JMenuItem removeItem = new JMenuItem("Удалить группу");
+        RemoveTreeNodeAction removeTreeNode = new RemoveTreeNodeAction(cardStructureTree, "Удалить");
+        removeTreeNode.putValue("command", ContextMenuCommand.REMOVE);
         AddExaminationSheetAction addExamSheet = new AddExaminationSheetAction(this, "Добавить осмотр");
         addExamSheet.putValue("command", ContextMenuCommand.ADD_EXAMINATION_SHEET);
 
         treeContextMenu.add(addAnalysisGroup);
         treeContextMenu.add(addAnalysisDoc);
         treeContextMenu.add(addExamSheet);
-        treeContextMenu.add(removeItem);
+        treeContextMenu.add(removeTreeNode);
 
         return treeContextMenu;
     }
@@ -132,6 +133,10 @@ public class MainWindow extends JFrame {
         return cardStructureTree;
     }
 
+    public ExaminationPanel getExaminationPanel() {
+        return examinationPanel;
+    }
+
     private class CustomTreeRenderer extends DefaultTreeCellRenderer {
         @Override
         public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
@@ -144,7 +149,8 @@ public class MainWindow extends JFrame {
             TreeNodeType nodeType = nodeModel.getNodeType();
             if (nodeType == TreeNodeType.ANALYSIS_PLACEHOLDER || nodeType == TreeNodeType.ANALYSIS_TYPE
                     || nodeType == TreeNodeType.SURGERY_PLACEHOLDER || nodeType == TreeNodeType.EXAMINATION_PLACEHOLDER
-                    || nodeType == TreeNodeType.TECH_EXAMINATION_PLACEHOLDER || nodeType == TreeNodeType.TECH_EXAMINATION_TYPE) {
+                    || nodeType == TreeNodeType.TECH_EXAMINATION_PLACEHOLDER || nodeType == TreeNodeType.TECH_EXAMINATION_TYPE
+                    || nodeType == TreeNodeType.EXAMINATION_TYPE) {
                 setIcon(getDefaultOpenIcon());
             }
 

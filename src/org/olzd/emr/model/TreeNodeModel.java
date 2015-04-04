@@ -1,6 +1,7 @@
 package org.olzd.emr.model;
 
 import org.olzd.emr.entity.AttachedFileWrapper;
+import org.olzd.emr.entity.ExaminationCard;
 import org.olzd.emr.entity.MedicalCard;
 
 import java.io.File;
@@ -34,8 +35,10 @@ public class TreeNodeModel {
             AttachedFileWrapper file = (AttachedFileWrapper) data;
             File f = new File(file.getPathToFile());
             return f.getName();
+        } else if (nodeType == TreeNodeType.EXAMINATION_SHEET) {
+            ExaminationCard examCard = (ExaminationCard) data;
+            return examCard.getDateOfCreation() == null ? "Безымянный" : ((ExaminationCard) data).getDateOfCreation().toString();
         }
-
 
         return data.toString();
     }

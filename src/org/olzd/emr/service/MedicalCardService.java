@@ -3,6 +3,7 @@ package org.olzd.emr.service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.olzd.emr.entity.AttachedFileWrapper;
+import org.olzd.emr.entity.ExaminationCard;
 import org.olzd.emr.entity.MedicalCard;
 import org.olzd.emr.entity.ParentsInfo;
 import org.olzd.emr.model.SearchByNameModel;
@@ -41,6 +42,7 @@ public class MedicalCardService {
                     card.setAnalysisAttachedFiles(findAllAttachedAnalysisFiles(card));
                     card.setTechExaminationAttachedFiles(findAllAttachedTechExamFiles(card));
                     card.setSurgeriesFiles(findAllSurgeryFiles(card));
+                    card.setExamCards(findAllAttachedExaminations(card));
 
                     ParentsInfo parentsInfo = new ParentsInfo();
                     parentsInfo.setMotherName(rs.getString(12));
@@ -80,17 +82,17 @@ public class MedicalCardService {
         List<SearchResult> res = new ArrayList<>(3);
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
             String findQuery = "select card_id, name, surname"
-                    + " from medical_card where surname like ? and name like ?";
+                    + " from medical_card where lower(surname) like ? and lower(name) like ?";
             try (PreparedStatement st = conn.prepareStatement(findQuery)) {
-                st.setString(1, surname);
-                st.setString(2, name);
+                st.setString(1, surname.toLowerCase());
+                st.setString(2, name.toLowerCase());
                 ResultSet rs = st.executeQuery();
                 while (rs.next()) {
                     res.add(new SearchResult(rs.getInt(1), rs.getString(2), rs.getString(3)));
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            LOGGER.error("Error while trying to find existing card", e);
         }
 
         return res;
@@ -280,6 +282,44 @@ public class MedicalCardService {
         } catch (SQLException e) {
             System.out.println(e);
         }
+        return result;
+    }
+
+    public void saveExamSheet(MedicalCard card, ExaminationCard examination) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+            String query = "insert into examinations (card_id, notes, treatment, date_of_examination, by_doctor) values (?, ?, ?, ?, ?)";
+            PreparedStatement stat = conn.prepareStatement(query);
+            stat.setInt(1, card.getCardId());
+            stat.setString(2, examination.getNotes());
+            stat.setString(3, examination.getTreatment());
+            stat.setDate(4, examination.getDateOfCreation() == null ? null : new Date(examination.getDateOfCreation().getTime()));
+            stat.setString(5, examination.getByDoctor());
+            stat.execute();
+        } catch (SQLException e) {
+            LOGGER.error("error occured while saving exam sheet", e);
+        }
+    }
+
+    public List<ExaminationCard> findAllAttachedExaminations(MedicalCard card) {
+        List<ExaminationCard> result = new ArrayList<>(5);
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+            String query = "select notes, treatment, date_of_examination, by_doctor from examinations where card_id = ?";
+            PreparedStatement stat = conn.prepareStatement(query);
+            stat.setInt(1, card.getCardId());
+            ResultSet rs = stat.executeQuery();
+
+            while (rs.next()) {
+                ExaminationCard exam = new ExaminationCard();
+                exam.setNotes(rs.getString("notes"));
+                exam.setTreatment(rs.getString("treatment"));
+                exam.setDateOfCreation(rs.getDate("date_of_examination"));
+                exam.setByDoctor(rs.getString("by_doctor"));
+                result.add(exam);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("error while retrieving exam card");
+        }
+
         return result;
     }
 }

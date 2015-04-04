@@ -19,6 +19,7 @@ public class MedicalCard {
     private List<AttachedFileWrapper> analysisAttachedFiles = new ArrayList<>(5);
     private List<AttachedFileWrapper> techExaminationAttachedFiles = new ArrayList<>(5);
     private List<AttachedFileWrapper> surgeriesFiles = new ArrayList<>(5);
+    private List<ExaminationCard> examCards = new ArrayList<>(5);
     private boolean wasModified;
 
     public String getName() {
@@ -174,6 +175,19 @@ public class MedicalCard {
 
     public void addSurgeryFile(AttachedFileWrapper fileWrapper) {
         surgeriesFiles.add(fileWrapper);
+    }
+
+
+    public List<ExaminationCard> getExamCards() {
+        return examCards;
+    }
+
+    public void setExamCards(List<ExaminationCard> examCards) {
+        this.examCards = examCards;
+    }
+
+    public void addExamCard(ExaminationCard card) {
+        examCards.add(card);
     }
 
     @Override

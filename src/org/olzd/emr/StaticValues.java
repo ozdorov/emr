@@ -12,12 +12,13 @@ public class StaticValues {
     private static final Map<TreeNodeType, List<ContextMenuCommand>> contextMenuMapping = new HashMap<>(3);
 
     static {
-        contextMenuMapping.put(TreeNodeType.ANALYSIS_PLACEHOLDER, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_GROUP));
-        contextMenuMapping.put(TreeNodeType.ANALYSIS_TYPE, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_FILE));
-        contextMenuMapping.put(TreeNodeType.SURGERY_PLACEHOLDER, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_FILE));
-        contextMenuMapping.put(TreeNodeType.TECH_EXAMINATION_PLACEHOLDER, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_GROUP));
-        contextMenuMapping.put(TreeNodeType.TECH_EXAMINATION_TYPE, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_FILE));
-        contextMenuMapping.put(TreeNodeType.EXAMINATION_PLACEHOLDER, Arrays.asList(ContextMenuCommand.ADD_EXAMINATION_SHEET));
+        contextMenuMapping.put(TreeNodeType.ANALYSIS_PLACEHOLDER, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_GROUP, ContextMenuCommand.REMOVE));
+        contextMenuMapping.put(TreeNodeType.ANALYSIS_TYPE, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_FILE, ContextMenuCommand.REMOVE));
+        contextMenuMapping.put(TreeNodeType.SURGERY_PLACEHOLDER, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_FILE, ContextMenuCommand.REMOVE));
+        contextMenuMapping.put(TreeNodeType.TECH_EXAMINATION_PLACEHOLDER, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_GROUP, ContextMenuCommand.REMOVE));
+        contextMenuMapping.put(TreeNodeType.TECH_EXAMINATION_TYPE, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_FILE, ContextMenuCommand.REMOVE));
+        contextMenuMapping.put(TreeNodeType.EXAMINATION_PLACEHOLDER, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_GROUP, ContextMenuCommand.REMOVE));
+        contextMenuMapping.put(TreeNodeType.EXAMINATION_TYPE, Arrays.asList(ContextMenuCommand.ADD_EXAMINATION_SHEET, ContextMenuCommand.REMOVE));
     }
 
     public static List<ContextMenuCommand> getAvailableCommandsList(TreeNodeType key) {

@@ -73,7 +73,7 @@ public class Launcher {
         popupMenu.add(exitItem);
 
         SystemTray tray = SystemTray.getSystemTray();
-        URL bufferedImage = ClassLoader.getSystemResource("bulb.gif");
+        URL bufferedImage = ClassLoader.getSystemResource("hospital16.png");
         ImageIcon icon = new ImageIcon(bufferedImage);
 
         TrayIcon trayIcon = new TrayIcon(icon.getImage());

@@ -1,6 +1,7 @@
 package org.olzd.emr;
 
 import org.olzd.emr.entity.AttachedFileWrapper;
+import org.olzd.emr.entity.ExaminationCard;
 import org.olzd.emr.entity.MedicalCard;
 import org.olzd.emr.model.MedicalCardTreeModel;
 import org.olzd.emr.model.TreeNodeModel;
@@ -38,7 +39,7 @@ public class TreeHelper {
 
         DefaultMutableTreeNode analysisPlaceholder = insertNewNode(tree, top, "Анализы", TreeNodeType.ANALYSIS_PLACEHOLDER, false);
         DefaultMutableTreeNode surgeriesPlaceholder = insertNewNode(tree, top, "Операции", TreeNodeType.SURGERY_PLACEHOLDER, false);
-        insertNewNode(tree, top, "Осмотры", TreeNodeType.EXAMINATION_PLACEHOLDER, false);
+        DefaultMutableTreeNode examPlaceholder = insertNewNode(tree, top, "Осмотры", TreeNodeType.EXAMINATION_PLACEHOLDER, false);
         DefaultMutableTreeNode techExamPlaceholder = insertNewNode(tree, top, "Инструментальные исследования", TreeNodeType.TECH_EXAMINATION_PLACEHOLDER, false);
 
         insertNewNode(tree, top, card, TreeNodeType.CARDNODE, false);
@@ -46,6 +47,7 @@ public class TreeHelper {
         fillTreeWithAttachedFiles(tree, card.getAnalysisAttachedFiles(), analysisPlaceholder);
         fillTreeWithAttachedFiles(tree, card.getTechExaminationFiles(), techExamPlaceholder);
         fillTreeWithAttachedFiles(tree, card.getSurgeriesFiles(), surgeriesPlaceholder);
+        fillTreeWithExamSheets(tree, card.getExamCards(), examPlaceholder);
 
         tree.expandPath(new TreePath(top.getPath()));
     }
@@ -67,6 +69,31 @@ public class TreeHelper {
 
         for (AttachedFileWrapper file : attachedFiles) {
             DefaultMutableTreeNode parentNode = groupsToTreeNodes.get(file.getGroupName());
+            if (parentNode == null) {
+                insertNewNode(tree, placeholder, file, typeOfPHChildren, true);
+            } else {
+                insertNewNode(tree, parentNode, file, typeOfPHChildren.getChildNodesType(), true);
+            }
+        }
+    }
+
+    private void fillTreeWithExamSheets(JTree tree, Collection<ExaminationCard> examinationCards, DefaultMutableTreeNode placeholder) {
+        Map<String, DefaultMutableTreeNode> groupsToTreeNodes = new HashMap<>(4);
+        for (ExaminationCard file : examinationCards) {
+            if (file.getByDoctor() != null) {
+                groupsToTreeNodes.put(file.getByDoctor(), null);
+            }
+        }
+
+        TreeNodeModel phModel = (TreeNodeModel) placeholder.getUserObject();
+        TreeNodeType typeOfPHChildren = phModel.getChildNodesType();
+        for (String groupName : groupsToTreeNodes.keySet()) {
+            DefaultMutableTreeNode newNode = insertNewNode(tree, placeholder, groupName, typeOfPHChildren, true);
+            groupsToTreeNodes.put(groupName, newNode);
+        }
+
+        for (ExaminationCard file : examinationCards) {
+            DefaultMutableTreeNode parentNode = groupsToTreeNodes.get(file.getByDoctor());
             if (parentNode == null) {
                 insertNewNode(tree, placeholder, file, typeOfPHChildren, true);
             } else {
