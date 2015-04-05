@@ -8,6 +8,7 @@ import org.olzd.emr.reminder.BirthdayReminderTask;
 import org.olzd.emr.view.MainWindow;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +20,7 @@ public class Launcher {
 
     public static void main(String[] args) {
         setWindowsLookAndFeel();
+        setUIFont(new FontUIResource("Tahoma", Font.PLAIN, 14));
         final MainWindow mainWindow = new MainWindow();
         mainWindow.pack();
         addTrayIcon(mainWindow);
@@ -50,6 +52,16 @@ public class Launcher {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
 
+        }
+    }
+
+    public static void setUIFont(javax.swing.plaf.FontUIResource f) {
+        java.util.Enumeration keys = UIManager.getDefaults().keys();
+        while (keys.hasMoreElements()) {
+            Object key = keys.nextElement();
+            Object value = UIManager.get(key);
+            if (value != null && value instanceof javax.swing.plaf.FontUIResource)
+                UIManager.put(key, f);
         }
     }
 

@@ -22,9 +22,9 @@ public class EditMedicalCardPanel extends JPanel {
     private JTextField phoneNumber = new JTextField(16);
     private JTextField phoneNumber2 = new JTextField(16);
     private JTextField email = new JTextField(20);
-    private JTextArea address = new JTextArea(3, 20);
-    private JTextArea mainDiagnosis = new JTextArea(3, 20);
-    private JTextArea relatedDiagnosis = new JTextArea(3, 20);
+    private JTextArea address = new JTextArea(3, 30);
+    private JTextArea mainDiagnosis = new JTextArea(3, 30);
+    private JTextArea relatedDiagnosis = new JTextArea(3, 30);
     private JTextField motherName = new JTextField(16);
     private JTextField motherPhone = new JTextField(16);
     private JTextField fatherName = new JTextField(16);

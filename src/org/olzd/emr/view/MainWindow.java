@@ -101,7 +101,7 @@ public class MainWindow extends JFrame {
         searchPopup = new SearchPopup(this, "Найти карточку", true);
         searchPopup.setLocationRelativeTo(this);
 
-        cardStructureTree.setPreferredSize(new Dimension(250, 0));
+        cardStructureTree.setPreferredSize(new Dimension(280, 0));
         JScrollPane scrollPaneForTree = new JScrollPane(cardStructureTree);
 
         splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
