@@ -6,7 +6,7 @@ import org.olzd.emr.entity.AttachedFileWrapper;
 import org.olzd.emr.entity.ExaminationCard;
 import org.olzd.emr.entity.MedicalCard;
 import org.olzd.emr.entity.ParentsInfo;
-import org.olzd.emr.model.SearchByNameModel;
+import org.olzd.emr.model.SearchModel;
 import org.olzd.emr.model.SearchResult;
 
 import java.sql.*;
@@ -59,7 +59,7 @@ public class MedicalCardService {
         return card;
     }
 
-    public List<SearchResult> findMedicalCardByName(SearchByNameModel searchByName) {
+    public List<SearchResult> findMedicalCardByName(SearchModel searchByName) {
         List<SearchResult> res = new ArrayList<>(3);
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
             String findQuery = "select card_id, name, surname"
@@ -73,6 +73,25 @@ public class MedicalCardService {
             }
         } catch (SQLException e) {
             LOGGER.error("Error while trying to find medical card by surname + = " + searchByName.getSurname(), e);
+        }
+
+        return res;
+    }
+
+    public List<SearchResult> findMedicalCardByDiagnosis(String diagnosis) {
+        List<SearchResult> res = new ArrayList<>(3);
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+            String findQuery = "select card_id, name, surname"
+                    + " from medical_card where diagnosis like concat('%' ,?, '%')";
+            try (PreparedStatement st = conn.prepareStatement(findQuery)) {
+                st.setString(1, diagnosis);
+                ResultSet rs = st.executeQuery();
+                while (rs.next()) {
+                    res.add(new SearchResult(rs.getInt(1), rs.getString(2), rs.getString(3)));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Error while trying to find medical card by diagnosis + = " + diagnosis, e);
         }
 
         return res;

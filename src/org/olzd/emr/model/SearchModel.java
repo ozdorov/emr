@@ -1,6 +1,6 @@
 package org.olzd.emr.model;
 
-public class SearchByNameModel {
+public class SearchModel {
     private String name;
     private String surname;
 
