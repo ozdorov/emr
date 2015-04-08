@@ -17,9 +17,11 @@ public class RemindersService {
 
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
             String query = "select name, surname, contact_phone from medical_card "
-                    + "where datediff(next_exam_date, ?) <= 5";
+                    + "where datediff(next_exam_date, ?) <= 5 and datediff(next_exam_date, ?) >=0";
             PreparedStatement stat = conn.prepareStatement(query);
-            stat.setDate(1, new Date(date.toDate().getTime()));
+            Date today = new Date(date.toDate().getTime());
+            stat.setDate(1, today);
+            stat.setDate(2, today);
 
             ResultSet rs = stat.executeQuery();
             while (rs.next()) {
