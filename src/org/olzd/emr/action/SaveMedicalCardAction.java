@@ -35,6 +35,7 @@ public class SaveMedicalCardAction extends AbstractAction {
 
         DefaultTreeModel treeModel = (DefaultTreeModel) panel.getParentFrame().getCardStructureTree().getModel();
         treeModel.reload();
+        panel.setShowPasswordButtonVisible();
     }
 
 }

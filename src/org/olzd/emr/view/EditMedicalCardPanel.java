@@ -4,10 +4,12 @@ import org.olzd.emr.UIHelper;
 import org.olzd.emr.action.CardTreeRefresher;
 import org.olzd.emr.action.SaveMedicalCardAction;
 import org.olzd.emr.model.MedicalCardModel;
+import org.olzd.emr.view.popups.PrivateNotesPopup;
 
 import javax.swing.*;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
+import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.text.ParseException;
@@ -30,6 +32,9 @@ public class EditMedicalCardPanel extends JPanel {
     private JTextField fatherName = new JTextField(16);
     private JTextField fatherPhone = new JTextField(16);
     private JButton saveButton = new JButton();
+    private JPasswordField privateNotesPass = new JPasswordField(16);
+    private JButton showPasswordButton = new JButton();
+    private JButton checkPasswordButton = new JButton();
     private final MainWindow parentFrame;
     private MedicalCardModel model;
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -47,6 +52,34 @@ public class EditMedicalCardPanel extends JPanel {
         SaveMedicalCardAction saveCardAction = new SaveMedicalCardAction(this);
         saveCardAction.putValue(Action.NAME, "Сохранить");
         saveButton.setAction(saveCardAction);
+
+        showPasswordButton.setAction(new AbstractAction("Заметки") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                privateNotesPass.setVisible(!privateNotesPass.isVisible());
+                checkPasswordButton.setVisible(!checkPasswordButton.isVisible());
+                parentFrame.revalidate();
+                parentFrame.repaint();
+            }
+        });
+        checkPasswordButton.setAction(new AbstractAction("Отобразить") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String pass = String.valueOf(privateNotesPass.getPassword());
+                if (pass.equals("карандаш")) {
+                    PrivateNotesPopup privateNotesPopup = new PrivateNotesPopup(parentFrame, "Заметки", true);
+                    privateNotesPopup.setLocationRelativeTo(parentFrame);
+                    privateNotesPopup.pack();
+                    privateNotesPopup.setVisible(true);
+
+                    //hide password field and show button after successful password
+                    hideNotesBlock();
+                }
+                privateNotesPass.setText("");
+            }
+        });
+
+        hideNotesBlock();
 
         MaskFormatter maskFormatter = null;
         try {
@@ -137,8 +170,15 @@ public class EditMedicalCardPanel extends JPanel {
         GroupLayout.SequentialGroup fatherPhoneRow = UIHelper.createFixedRowFromParams(layout, fatherPhoneLabel, fatherPhone);
         GroupLayout.ParallelGroup fatherPhoneColumn = UIHelper.createFixedColumnFromParams(layout, fatherPhoneLabel, fatherPhone);
 
-        GroupLayout.SequentialGroup saveButtonRow = layout.createSequentialGroup().addComponent(saveButton);
-        GroupLayout.ParallelGroup saveButtonColumn = layout.createParallelGroup().addComponent(saveButton);
+        GroupLayout.SequentialGroup saveButtonRow = layout.createSequentialGroup().addComponent(saveButton)
+                .addComponent(showPasswordButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(privateNotesPass, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(checkPasswordButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE);
+        GroupLayout.ParallelGroup saveButtonColumn = layout.createParallelGroup()
+                .addComponent(saveButton)
+                .addComponent(showPasswordButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(privateNotesPass, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(checkPasswordButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE);
 
         //todo add gap between text fields and [Save] button
         layout.setHorizontalGroup(layout.createParallelGroup().addGroup(nameRow).addGroup(surnameRow)
@@ -177,6 +217,9 @@ public class EditMedicalCardPanel extends JPanel {
         motherPhone.setDocument(cardModel.getMotherPhoneDoc());
         fatherName.setDocument(cardModel.getFatherNameDoc());
         fatherPhone.setDocument(cardModel.getFatherPhoneDoc());
+
+        //enable notes button is card is already saved.
+        showPasswordButton.setEnabled(cardModel.getCard().isExisting());
     }
 
     public MedicalCardModel getModel() {
@@ -194,6 +237,16 @@ public class EditMedicalCardPanel extends JPanel {
 
     public MainWindow getParentFrame() {
         return parentFrame;
+    }
+
+    public void setShowPasswordButtonVisible() {
+        showPasswordButton.setEnabled(true);
+    }
+
+    protected void hideNotesBlock() {
+        // showPasswordButton.setEnabled(false);
+        privateNotesPass.setVisible(false);
+        checkPasswordButton.setVisible(false);
     }
 
 }

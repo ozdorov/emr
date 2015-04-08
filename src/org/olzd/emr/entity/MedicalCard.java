@@ -16,6 +16,7 @@ public class MedicalCard {
     private String mainDiagnosis;
     private String relatedDiagnosis;
     private ParentsInfo parentsInfo;
+    private String privateNotes;
     private List<AttachedFileWrapper> analysisAttachedFiles = new ArrayList<>(5);
     private List<AttachedFileWrapper> techExaminationAttachedFiles = new ArrayList<>(5);
     private List<AttachedFileWrapper> surgeriesFiles = new ArrayList<>(5);
@@ -188,6 +189,14 @@ public class MedicalCard {
 
     public void addExamCard(ExaminationCard card) {
         examCards.add(card);
+    }
+
+    public String getPrivateNotes() {
+        return privateNotes;
+    }
+
+    public void setPrivateNotes(String privateNotes) {
+        this.privateNotes = privateNotes;
     }
 
     @Override

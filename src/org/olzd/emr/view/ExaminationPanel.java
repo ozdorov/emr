@@ -5,11 +5,10 @@ import org.olzd.emr.action.SaveExaminationSheetAction;
 import org.olzd.emr.model.ExaminationSheetModel;
 
 import javax.swing.*;
-import javax.swing.text.Document;
 
 public class ExaminationPanel extends JPanel {
-    private JTextArea notesArea = new JTextArea(6, 80);
-    private JTextArea treatmentArea = new JTextArea(6, 80);
+    private JTextArea notesArea = new JTextArea(6, 60);
+    private JTextArea treatmentArea = new JTextArea(6, 60);
     private ExaminationSheetModel panelModel;
 
     public ExaminationPanel(MainWindow mainWindow) {
@@ -46,14 +45,6 @@ public class ExaminationPanel extends JPanel {
                 .addGroup(buttonColumn));
 
         layout.linkSize(SwingConstants.HORIZONTAL, notesLabel, treatmentLabel);
-    }
-
-    public Document getNotesDocument() {
-        return notesArea.getDocument();
-    }
-
-    public Document getTreatmentDocument() {
-        return treatmentArea.getDocument();
     }
 
     public ExaminationSheetModel getPanelModel() {

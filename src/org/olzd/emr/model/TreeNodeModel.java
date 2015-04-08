@@ -1,10 +1,12 @@
 package org.olzd.emr.model;
 
+import org.joda.time.LocalDate;
 import org.olzd.emr.entity.AttachedFileWrapper;
 import org.olzd.emr.entity.ExaminationCard;
 import org.olzd.emr.entity.MedicalCard;
 
 import java.io.File;
+import java.util.Date;
 
 public class TreeNodeModel {
     private TreeNodeType nodeType;
@@ -37,7 +39,8 @@ public class TreeNodeModel {
             return f.getName();
         } else if (nodeType == TreeNodeType.EXAMINATION_SHEET) {
             ExaminationCard examCard = (ExaminationCard) data;
-            return examCard.getDateOfCreation() == null ? "Безымянный" : ((ExaminationCard) data).getDateOfCreation().toString();
+            Date dateOfCreation = examCard.getDateOfCreation();
+            return dateOfCreation == null ? "Безымянный" : new LocalDate(dateOfCreation.getTime()).toString();
         }
 
         return data.toString();

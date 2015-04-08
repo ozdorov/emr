@@ -20,7 +20,7 @@ public class MedicalCardService {
         MedicalCard card = new MedicalCard();
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
             String findQuery = "select card.card_id, name, middle_name, surname, birthday, contact_phone, contact_phone2, "
-                    + " email, address, diagnosis, related_diagnosis, next_exam_date, mother_name, mother_phone, father_name, father_phone "
+                    + " email, address, diagnosis, related_diagnosis, next_exam_date, mother_name, mother_phone, father_name, father_phone, private_notes "
                     + "from medical_card card left join parents_info par on (card.card_id = par.card_id) where card.card_id = ?";
             try (PreparedStatement st = conn.prepareStatement(findQuery)) {
                 st.setInt(1, searchByName.getCardId());
@@ -49,6 +49,7 @@ public class MedicalCardService {
                     parentsInfo.setMotherPhone(rs.getString(13));
                     parentsInfo.setFatherName(rs.getString(14));
                     parentsInfo.setFatherPhone(rs.getString(15));
+                    card.setPrivateNotes(rs.getString("private_notes"));
                     card.setParentsInfo(parentsInfo);
                 }
             }
@@ -336,9 +337,21 @@ public class MedicalCardService {
                 result.add(exam);
             }
         } catch (SQLException e) {
-            LOGGER.error("error while retrieving exam card");
+            LOGGER.error("error while retrieving exam card", e);
         }
 
         return result;
+    }
+
+    public void savePrivateNotesForCard(int cardId, String text) {
+        String query = "update medical_card set private_notes = ? where card_id = ?";
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+            PreparedStatement stat = conn.prepareStatement(query);
+            stat.setString(1, text);
+            stat.setInt(2, cardId);
+            stat.execute();
+        } catch (SQLException e) {
+            LOGGER.error("error while saving private notes", e);
+        }
     }
 }
