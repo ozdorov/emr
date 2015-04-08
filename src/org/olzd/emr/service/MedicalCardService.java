@@ -2,6 +2,7 @@ package org.olzd.emr.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.FormattedMessage;
 import org.olzd.emr.entity.AttachedFileWrapper;
 import org.olzd.emr.entity.ExaminationCard;
 import org.olzd.emr.entity.MedicalCard;
@@ -15,10 +16,11 @@ import java.util.List;
 
 public class MedicalCardService {
     private static final Logger LOGGER = LogManager.getLogger(MedicalCardService.class.getName());
+    private static final String CONNECTION_STRING = "jdbc:mysql://localhost/emr_schema?user=emr&password=emr_";
 
     public MedicalCard loadMedicalCard(SearchResult searchByName) {
         MedicalCard card = new MedicalCard();
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             String findQuery = "select card.card_id, name, middle_name, surname, birthday, contact_phone, contact_phone2, "
                     + " email, address, diagnosis, related_diagnosis, next_exam_date, mother_name, mother_phone, father_name, father_phone, private_notes "
                     + "from medical_card card left join parents_info par on (card.card_id = par.card_id) where card.card_id = ?";
@@ -62,7 +64,7 @@ public class MedicalCardService {
 
     public List<SearchResult> findMedicalCardByName(SearchModel searchByName) {
         List<SearchResult> res = new ArrayList<>(3);
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             String findQuery = "select card_id, name, surname"
                     + " from medical_card where surname like concat(?, '%')";
             try (PreparedStatement st = conn.prepareStatement(findQuery)) {
@@ -100,7 +102,7 @@ public class MedicalCardService {
 
     public List<SearchResult> findExistingMedicalCard(String surname, String name) {
         List<SearchResult> res = new ArrayList<>(3);
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             String findQuery = "select card_id, name, surname"
                     + " from medical_card where lower(surname) like ? and lower(name) like ?";
             try (PreparedStatement st = conn.prepareStatement(findQuery)) {
@@ -119,7 +121,7 @@ public class MedicalCardService {
     }
 
     public void updateMedicalCard(MedicalCard card) {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             String updateSql = new StringBuilder("update medical_card "
                     + "set name = ?, middle_name = ?, surname = ?, birthday = ?, contact_phone = ?, contact_phone2 = ?, "
                     + "email = ?, address = ?, diagnosis = ?, related_diagnosis = ?, next_exam_date = ?"
@@ -150,7 +152,7 @@ public class MedicalCardService {
     }
 
     public void createMedicalCard(MedicalCard card) {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             String insertSQL = new StringBuilder("insert into medical_card"
                     + "(name, middle_name, surname, birthday, contact_phone, contact_phone2,"
                     + "email, address, diagnosis, related_diagnosis, next_exam_date)"
@@ -186,7 +188,7 @@ public class MedicalCardService {
     }
 
     public void saveAnalysisFileRecord(MedicalCard card, AttachedFileWrapper analysisFile) {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             String insertSQL = new StringBuilder("insert into analysis_docs" +
                     "(card_id, analysis_group, file_location) values (?, ?, ?)").toString();
             try (PreparedStatement statement = conn.prepareStatement(insertSQL)) {
@@ -217,7 +219,7 @@ public class MedicalCardService {
 
     public List<AttachedFileWrapper> findAllAttachedAnalysisFiles(MedicalCard card) {
         List<AttachedFileWrapper> result = new ArrayList<>(5);
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             String insertSQL = new StringBuilder("select analysis_group, file_location from analysis_docs" +
                     " where card_id = ?").toString();
             try (PreparedStatement st = conn.prepareStatement(insertSQL)) {
@@ -235,7 +237,7 @@ public class MedicalCardService {
 
     public List<AttachedFileWrapper> findAllAttachedTechExamFiles(MedicalCard card) {
         List<AttachedFileWrapper> result = new ArrayList<>(5);
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             String insertSQL = new StringBuilder("select examination_group, file_location from tech_examination_docs" +
                     " where card_id = ?").toString();
             try (PreparedStatement st = conn.prepareStatement(insertSQL)) {
@@ -253,7 +255,7 @@ public class MedicalCardService {
 
     public void saveParentsInfo(MedicalCard card) {
         ParentsInfo parentsInfo = card.getParentsInfo();
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             String query = "insert into parents_info (card_id, mother_name, mother_phone, father_name, father_phone) " +
                     "values (?, ?, ?, ?, ?) " +
                     "on duplicate key update mother_name = ?, mother_phone = ?, father_name = ?, father_phone = ?";
@@ -289,7 +291,7 @@ public class MedicalCardService {
 
     public List<AttachedFileWrapper> findAllSurgeryFiles(MedicalCard card) {
         List<AttachedFileWrapper> result = new ArrayList<>(5);
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             String query = new StringBuilder("select file_location from surgeries" +
                     " where card_id = ?").toString();
             try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -306,7 +308,7 @@ public class MedicalCardService {
     }
 
     public void saveExamSheet(MedicalCard card, ExaminationCard examination) {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             String query = "insert into examinations (card_id, notes, treatment, date_of_examination, by_doctor) values (?, ?, ?, ?, ?)";
             PreparedStatement stat = conn.prepareStatement(query);
             stat.setInt(1, card.getCardId());
@@ -322,7 +324,7 @@ public class MedicalCardService {
 
     public List<ExaminationCard> findAllAttachedExaminations(MedicalCard card) {
         List<ExaminationCard> result = new ArrayList<>(5);
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             String query = "select notes, treatment, date_of_examination, by_doctor from examinations where card_id = ?";
             PreparedStatement stat = conn.prepareStatement(query);
             stat.setInt(1, card.getCardId());
@@ -345,13 +347,81 @@ public class MedicalCardService {
 
     public void savePrivateNotesForCard(int cardId, String text) {
         String query = "update medical_card set private_notes = ? where card_id = ?";
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
             PreparedStatement stat = conn.prepareStatement(query);
             stat.setString(1, text);
             stat.setInt(2, cardId);
             stat.execute();
         } catch (SQLException e) {
             LOGGER.error("error while saving private notes", e);
+        }
+    }
+
+
+    public void removeAnalysisFileRecord(MedicalCard card, AttachedFileWrapper analysisFile) {
+        String query = "delete from analysis_docs where card_id = ? and analysis_group = ? and file_location = ?";
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
+            PreparedStatement stat = conn.prepareStatement(query);
+            stat.setInt(1, card.getCardId());
+            stat.setString(2, analysisFile.getGroupName());
+            stat.setString(3, analysisFile.getPathToFile());
+            stat.execute();
+
+            FormattedMessage message = new FormattedMessage("Analysis file with path = {} was removed for cardId = {}",
+                    analysisFile.getPathToFile(), card.getCardId());
+            LOGGER.info(message);
+        } catch (SQLException e) {
+            LOGGER.error("error while deleting analysis file record", e);
+        }
+    }
+
+    public void removeTechExaminationFileRecord(MedicalCard card, AttachedFileWrapper techExamFile) {
+        String query = "delete from tech_examination_docs where card_id = ? and examination_group = ? and file_location = ?";
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
+            PreparedStatement stat = conn.prepareStatement(query);
+            stat.setInt(1, card.getCardId());
+            stat.setString(2, techExamFile.getGroupName());
+            stat.setString(3, techExamFile.getPathToFile());
+            stat.execute();
+
+            FormattedMessage message = new FormattedMessage("Tech exam file with path = {} was removed for cardId = {}",
+                    techExamFile.getPathToFile(), card.getCardId());
+            LOGGER.info(message);
+        } catch (SQLException e) {
+            LOGGER.error("error while deleting tech exam record", e);
+        }
+    }
+
+    public void removeExamSheet(MedicalCard card, ExaminationCard examinationCard) {
+        String query = "delete from examinations where card_id = ? and by_doctor = ? and date_of_examination = ?";
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
+            PreparedStatement stat = conn.prepareStatement(query);
+            stat.setInt(1, card.getCardId());
+            stat.setString(2, examinationCard.getByDoctor());
+            stat.setDate(3, examinationCard.getDateOfCreation() == null ? null : new Date(examinationCard.getDateOfCreation().getTime()));
+            stat.execute();
+
+            FormattedMessage message = new FormattedMessage("Examination sheet with date = {} was removed for cardId = {}",
+                    examinationCard.getDateOfCreation(), card.getCardId());
+            LOGGER.info(message);
+        } catch (SQLException e) {
+            LOGGER.error("error while deleting exam sheet record", e);
+        }
+    }
+
+    public void removeSurgeryAttachmentRecord(MedicalCard card, AttachedFileWrapper surgeryFile) {
+        String query = "delete from surgeries where card_id = ? and file_location = ?";
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING)) {
+            PreparedStatement stat = conn.prepareStatement(query);
+            stat.setInt(1, card.getCardId());
+            stat.setString(2, surgeryFile.getPathToFile());
+            stat.execute();
+
+            FormattedMessage message = new FormattedMessage("Surgery file with path = {} was removed for cardId = {}",
+                    surgeryFile.getPathToFile(), card.getCardId());
+            LOGGER.info(message);
+        } catch (SQLException e) {
+            LOGGER.error("error while deleting surgery file record", e);
         }
     }
 }

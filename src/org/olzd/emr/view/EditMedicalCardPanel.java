@@ -79,8 +79,6 @@ public class EditMedicalCardPanel extends JPanel {
             }
         });
 
-        hideNotesBlock();
-
         MaskFormatter maskFormatter = null;
         try {
             maskFormatter = new MaskFormatter("##/##/####");
@@ -96,6 +94,8 @@ public class EditMedicalCardPanel extends JPanel {
     private void constructPanelView(GroupLayout layout) {
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
+
+        hideNotesBlock();
 
         JLabel nameLabel = new JLabel("Имя");
         JLabel surnameLabel = new JLabel("Фамилия");

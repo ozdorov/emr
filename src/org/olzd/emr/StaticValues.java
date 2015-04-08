@@ -19,6 +19,10 @@ public class StaticValues {
         contextMenuMapping.put(TreeNodeType.TECH_EXAMINATION_TYPE, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_FILE, ContextMenuCommand.REMOVE));
         contextMenuMapping.put(TreeNodeType.EXAMINATION_PLACEHOLDER, Arrays.asList(ContextMenuCommand.ADD_ATTACHMENT_GROUP, ContextMenuCommand.REMOVE));
         contextMenuMapping.put(TreeNodeType.EXAMINATION_TYPE, Arrays.asList(ContextMenuCommand.ADD_EXAMINATION_SHEET, ContextMenuCommand.REMOVE));
+        contextMenuMapping.put(TreeNodeType.ANALYSIS_FILE, Arrays.asList(ContextMenuCommand.REMOVE));
+        contextMenuMapping.put(TreeNodeType.TECH_EXAMINATION_FILE, Arrays.asList(ContextMenuCommand.REMOVE));
+        contextMenuMapping.put(TreeNodeType.EXAMINATION_SHEET, Arrays.asList(ContextMenuCommand.REMOVE));
+        contextMenuMapping.put(TreeNodeType.SURGERY_FILE, Arrays.asList(ContextMenuCommand.REMOVE));
     }
 
     public static List<ContextMenuCommand> getAvailableCommandsList(TreeNodeType key) {
