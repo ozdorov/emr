@@ -5,3 +5,5 @@
 /*.iml
 /lib
 /files
+/.gradle
+/build

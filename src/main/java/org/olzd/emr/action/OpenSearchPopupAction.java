@@ -5,7 +5,7 @@ import org.olzd.emr.view.popups.SearchPopup;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class OpenSearchPopupAction extends AbstractAction{
+public class OpenSearchPopupAction extends AbstractAction {
     private SearchPopup searchPopup;
 
     public OpenSearchPopupAction(SearchPopup searchDialog) {
