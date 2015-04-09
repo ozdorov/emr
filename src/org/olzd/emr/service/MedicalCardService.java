@@ -47,10 +47,10 @@ public class MedicalCardService {
                     card.setExamCards(findAllAttachedExaminations(card));
 
                     ParentsInfo parentsInfo = new ParentsInfo();
-                    parentsInfo.setMotherName(rs.getString(12));
-                    parentsInfo.setMotherPhone(rs.getString(13));
-                    parentsInfo.setFatherName(rs.getString(14));
-                    parentsInfo.setFatherPhone(rs.getString(15));
+                    parentsInfo.setMotherName(rs.getString(13));
+                    parentsInfo.setMotherPhone(rs.getString(14));
+                    parentsInfo.setFatherName(rs.getString(15));
+                    parentsInfo.setFatherPhone(rs.getString(16));
                     card.setPrivateNotes(rs.getString("private_notes"));
                     card.setParentsInfo(parentsInfo);
                 }
