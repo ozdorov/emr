@@ -16,7 +16,7 @@ public class RemindersService {
         List<MedicalCard> result = new ArrayList<>(3);
 
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
-            String query = "select name, surname, contact_phone from medical_card "
+            String query = "select card_id, name, surname, contact_phone from medical_card "
                     + "where datediff(next_exam_date, ?) <= 5 and datediff(next_exam_date, ?) >=0";
             PreparedStatement stat = conn.prepareStatement(query);
             Date today = new Date(date.toDate().getTime());
@@ -26,9 +26,10 @@ public class RemindersService {
             ResultSet rs = stat.executeQuery();
             while (rs.next()) {
                 MedicalCard card = new MedicalCard();
-                card.setName(rs.getString(1));
-                card.setSurname(rs.getString(2));
-                card.setContactPhone1(rs.getString(3));
+                card.setCardId(rs.getInt("card_id"));
+                card.setName(rs.getString("name"));
+                card.setSurname(rs.getString("surname"));
+                card.setContactPhone1(rs.getString("contact_phone"));
                 result.add(card);
             }
         } catch (SQLException e) {
@@ -42,7 +43,7 @@ public class RemindersService {
         List<MedicalCard> result = new ArrayList<>(3);
 
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emr_schema?user=emr&password=emr_")) {
-            String query = "select name, surname, contact_phone from medical_card "
+            String query = "select card_id, name, surname, contact_phone from medical_card "
                     + "where dayofmonth(birthday) = ? and month(birthday) = ?";
             PreparedStatement stat = conn.prepareStatement(query);
             stat.setInt(1, date.getDayOfMonth());
@@ -51,9 +52,10 @@ public class RemindersService {
             ResultSet rs = stat.executeQuery();
             while (rs.next()) {
                 MedicalCard card = new MedicalCard();
-                card.setName(rs.getString(1));
-                card.setSurname(rs.getString(2));
-                card.setContactPhone1(rs.getString(3));
+                card.setCardId(rs.getInt("card_id"));
+                card.setName(rs.getString("name"));
+                card.setSurname(rs.getString("surname"));
+                card.setContactPhone1(rs.getString("contact_phone"));
                 result.add(card);
             }
         } catch (SQLException e) {

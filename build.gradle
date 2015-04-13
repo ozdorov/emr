@@ -1,0 +1,43 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+jar {
+    manifest {
+        attributes 'Class-Path': 'mysql-connector-java-5.1.35.jar cron4j-2.2.5.jar joda-time-2.7.jar log4j-api-2.2.jar log4j-core-2.2.jar',
+                'Main-Class': 'org.olzd.emr.Launcher'
+    }
+}
+
+dependencies {
+    compile(
+            ['mysql:mysql-connector-java:5.1.35'],
+            ['it.sauronsoftware.cron4j:cron4j:2.2.5'],
+            ['joda-time:joda-time:2.7'],
+            ['org.apache.logging.log4j:log4j-api:2.2'],
+            ['org.apache.logging.log4j:log4j-core:2.2']
+    )
+}
+
+task buildFinalDir(dependsOn: ['assemble']) << {
+    copy {
+        from libsDir
+        into "${buildDir}/finalDir"
+    }
+    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+        copy {
+            from artifact.file
+            into "${buildDir}/finalDir"
+        }
+    }
+}
+
+
+task generateExe(type: Exec, dependsOn: ['buildFinalDir']) {
+    workingDir "${buildDir}\\finalDir"
+    commandLine "C:\\Program Files (x86)\\NSIS\\makensis.exe", "${projectDir}\\etc\\nsis_1.nsi"
+}
