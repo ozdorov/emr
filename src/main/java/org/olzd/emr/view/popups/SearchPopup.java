@@ -4,6 +4,7 @@ import org.olzd.emr.action.SearchMedicalCardAction;
 import org.olzd.emr.action.ShowMedicalCardAction;
 import org.olzd.emr.model.SearchModel;
 import org.olzd.emr.model.SearchResult;
+import org.olzd.emr.view.CCPTextField;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -58,7 +59,7 @@ public class SearchPopup extends JDialog {
         scrollPaneForList.setName(LIST_OF_CARDS_NAME);
         tuneFoundCardsList(resultList);
 
-        JTextField criteriaField = new JTextField(20);
+        CCPTextField criteriaField = new CCPTextField(20);
         criteriaField.setName(CRITERIA_TEXT_INPUT_NAME);
 
         JButton startSearchButton = new JButton();

@@ -3,6 +3,7 @@ package org.olzd.emr.view.popups;
 import org.olzd.emr.UIHelper;
 import org.olzd.emr.entity.MedicalCard;
 import org.olzd.emr.service.MedicalCardService;
+import org.olzd.emr.view.CCPTextArea;
 import org.olzd.emr.view.MainWindow;
 
 import javax.swing.*;
@@ -10,7 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class PrivateNotesPopup extends JDialog {
-    private JTextArea privateNotes = new JTextArea(6, 30);
+    private CCPTextArea privateNotes = new CCPTextArea(6, 30);
 
     public PrivateNotesPopup(final MainWindow owner, String title, boolean modal) {
         super(owner, title, modal);

@@ -7,8 +7,8 @@ import org.olzd.emr.model.ExaminationSheetModel;
 import javax.swing.*;
 
 public class ExaminationPanel extends JPanel {
-    private JTextArea notesArea = new JTextArea(6, 60);
-    private JTextArea treatmentArea = new JTextArea(6, 60);
+    private CCPTextArea notesArea = new CCPTextArea(6, 60);
+    private CCPTextArea treatmentArea = new CCPTextArea(6, 60);
     private ExaminationSheetModel panelModel;
 
     public ExaminationPanel(MainWindow mainWindow) {

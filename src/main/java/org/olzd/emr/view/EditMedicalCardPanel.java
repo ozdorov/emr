@@ -7,6 +7,7 @@ import org.olzd.emr.model.MedicalCardModel;
 import org.olzd.emr.view.popups.PrivateNotesPopup;
 
 import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 import java.awt.event.ActionEvent;
@@ -16,21 +17,21 @@ import java.text.ParseException;
 
 public class EditMedicalCardPanel extends JPanel {
 
-    private JTextField name = new JTextField(16);
-    private JTextField surname = new JTextField(16);
-    private JTextField middleName = new JTextField(16);
+    private CCPTextField name = new CCPTextField(16);
+    private CCPTextField surname = new CCPTextField(16);
+    private CCPTextField middleName = new CCPTextField(16);
     private JFormattedTextField birthday = new JFormattedTextField();
     private JFormattedTextField dateOfNextExamination = new JFormattedTextField();
-    private JTextField phoneNumber = new JTextField(16);
-    private JTextField phoneNumber2 = new JTextField(16);
-    private JTextField email = new JTextField(20);
-    private JTextArea address = new JTextArea(3, 30);
-    private JTextArea mainDiagnosis = new JTextArea(3, 30);
-    private JTextArea relatedDiagnosis = new JTextArea(3, 30);
-    private JTextField motherName = new JTextField(16);
-    private JTextField motherPhone = new JTextField(16);
-    private JTextField fatherName = new JTextField(16);
-    private JTextField fatherPhone = new JTextField(16);
+    private CCPTextField phoneNumber = new CCPTextField(16);
+    private CCPTextField phoneNumber2 = new CCPTextField(16);
+    private CCPTextField email = new CCPTextField(20);
+    private CCPTextArea address = new CCPTextArea(3, 30);
+    private CCPTextArea mainDiagnosis = new CCPTextArea(3, 30);
+    private CCPTextArea relatedDiagnosis = new CCPTextArea(3, 30);
+    private CCPTextField motherName = new CCPTextField(16);
+    private CCPTextField motherPhone = new CCPTextField(16);
+    private CCPTextField fatherName = new CCPTextField(16);
+    private CCPTextField fatherPhone = new CCPTextField(16);
     private JButton saveButton = new JButton();
     private JPasswordField privateNotesPass = new JPasswordField(16);
     private JButton showPasswordButton = new JButton();
@@ -181,12 +182,12 @@ public class EditMedicalCardPanel extends JPanel {
                 .addComponent(checkPasswordButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE);
 
         //todo add gap between text fields and [Save] button
-        layout.setHorizontalGroup(layout.createParallelGroup().addGroup(nameRow).addGroup(surnameRow)
+        layout.setHorizontalGroup(layout.createParallelGroup().addGroup(surnameRow).addGroup(nameRow)
                 .addGroup(midNameRow).addGroup(birthdayRow).addGroup(emailRow).addGroup(phoneNumRow).addGroup(phoneNum2Row)
                 .addGroup(addressRow).addGroup(diagnosisRow).addGroup(relatedDiagnosisRow)
                 .addGroup(motherNameRow).addGroup(motherPhoneRow).addGroup(fatherNameRow).addGroup(fatherPhoneRow)
                 .addGroup(saveButtonRow));
-        layout.setVerticalGroup(layout.createSequentialGroup().addGroup(nameColumn).addGroup(surnameColumn)
+        layout.setVerticalGroup(layout.createSequentialGroup().addGroup(surnameColumn).addGroup(nameColumn)
                 .addGroup(midNameColumn).addGroup(birthColumn).addGroup(emailColumn).addGroup(phoneNumColumn).addGroup(phoneNum2Column)
                 .addGroup(addressColumn).addGroup(diagnosisColumn).addGroup(relatedDiagnosisColumn)
                 .addGroup(motherNameColumn).addGroup(motherPhoneColumn).addGroup(fatherNameColumn).addGroup(fatherPhoneColumn)
@@ -197,6 +198,45 @@ public class EditMedicalCardPanel extends JPanel {
                 birthdayLabel, phoneNumberLabel, phoneNumberLabel2, emailLabel, addressLabel,
                 mainDiagnosisLabel, relatedDiagnosisLabel,
                 motherNameLabel, fatherNameLabel, motherPhoneLabel, fatherPhoneLabel);
+
+//        final JPopupMenu tempMenu = createCCPContextMenu();
+//
+//        mainDiagnosis.add(tempMenu);
+//        mainDiagnosis.addMouseListener(new MouseAdapter() {
+//            public void mouseReleased(MouseEvent e) {
+//                if (e.isPopupTrigger()) {
+//                    int x = e.getX();
+//                    int y = e.getY();
+//                    tempMenu.show(mainDiagnosis, x, y);
+//                }
+//            }
+//        });
+    }
+
+    public JPopupMenu createCCPContextMenu() {
+        JPopupMenu ccpMenu = new JPopupMenu();
+        JMenuItem menuItem = null;
+        //  JMenuBar menuBar = new JMenuBar();
+        //JMenu mainMenu = new JMenu("Edit");
+        //mainMenu.setMnemonic(KeyEvent.VK_E);
+
+        menuItem = new JMenuItem(new DefaultEditorKit.CutAction());
+        menuItem.setText("Cut");
+        //menuItem.setMnemonic(KeyEvent.VK_T);
+        ccpMenu.add(menuItem);
+
+        menuItem = new JMenuItem(new DefaultEditorKit.CopyAction());
+        menuItem.setText("Copy");
+        //menuItem.setMnemonic(KeyEvent.VK_C);
+        ccpMenu.add(menuItem);
+
+        menuItem = new JMenuItem(new DefaultEditorKit.PasteAction());
+        menuItem.setText("Paste");
+        //menuItem.setMnemonic(KeyEvent.VK_P);
+        ccpMenu.add(menuItem);
+
+        //menuBar.add(mainMenu);
+        return ccpMenu;
     }
 
     public void injectMedicalCardModel(MedicalCardModel cardModel) {
