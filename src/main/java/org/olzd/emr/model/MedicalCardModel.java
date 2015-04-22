@@ -11,7 +11,7 @@ import javax.swing.text.PlainDocument;
 public class MedicalCardModel {
     private Document nameDoc = new PlainDocument();
     private Document surnameDoc = new PlainDocument();
-    private Document birthdayDoc = new PlainDocument();
+    private String birthdayValue = new String();
     private Document middleNameDoc = new PlainDocument();
     private Document emailDoc = new PlainDocument();
     private Document addressDoc = new PlainDocument();
@@ -19,13 +19,15 @@ public class MedicalCardModel {
     private Document contactPhone2Doc = new PlainDocument();
     private Document diagnosisDoc = new PlainDocument();
     private Document relatedDiagnosisDoc = new PlainDocument();
-    private Document nextExamDate = new PlainDocument();
+    private String nextExamDate = new String();
     private Document motherNameDoc = new PlainDocument();
     private Document motherPhoneDoc = new PlainDocument();
     private Document fatherNameDoc = new PlainDocument();
     private Document fatherPhoneDoc = new PlainDocument();
 
     private MedicalCard card;
+    private Document birthdayDoc = new PlainDocument();
+    private Document dateOfNextExamDoc = new PlainDocument();
 
     public MedicalCardModel(MedicalCard fromCard) {
         this.card = fromCard;
@@ -34,13 +36,13 @@ public class MedicalCardModel {
             surnameDoc.insertString(0, fromCard.getSurname(), null);
             contactPhoneDoc.insertString(0, fromCard.getContactPhone1(), null);
             contactPhone2Doc.insertString(0, fromCard.getContactPhone2(), null);
-            birthdayDoc.insertString(0, UIHelper.formatDate(fromCard.getDateOfBirth()), null);
+            birthdayValue = UIHelper.formatDate(fromCard.getDateOfBirth());
             middleNameDoc.insertString(0, fromCard.getMiddleName(), null);
             emailDoc.insertString(0, fromCard.getEmail(), null);
             addressDoc.insertString(0, fromCard.getAddress(), null);
             diagnosisDoc.insertString(0, fromCard.getMainDiagnosis(), null);
             relatedDiagnosisDoc.insertString(0, fromCard.getRelatedDiagnosis(), null);
-            nextExamDate.insertString(0, UIHelper.formatDate(fromCard.getDateOfNextExamination()), null);
+            nextExamDate = UIHelper.formatDate(fromCard.getDateOfNextExamination());
             ParentsInfo parentsInfo = fromCard.getParentsInfo();
             motherNameDoc.insertString(0, parentsInfo.getMotherName(), null);
             fatherNameDoc.insertString(0, parentsInfo.getFatherName(), null);
@@ -59,8 +61,8 @@ public class MedicalCardModel {
         return nameDoc;
     }
 
-    public Document getBirthdayDoc() {
-        return birthdayDoc;
+    public String getBirthdayValue() {
+        return birthdayValue;
     }
 
     public Document getSurnameDoc() {
@@ -95,7 +97,7 @@ public class MedicalCardModel {
         return relatedDiagnosisDoc;
     }
 
-    public Document getNextExamDate() {
+    public String getNextExamDate() {
         return nextExamDate;
     }
 
@@ -117,8 +119,7 @@ public class MedicalCardModel {
 
     public MedicalCard getCard() {
         try {
-            String birthdayValue = birthdayDoc.getText(0, birthdayDoc.getLength());
-            card.setDateOfBirth(UIHelper.parseDate(birthdayValue));
+            card.setDateOfBirth(UIHelper.parseDate(birthdayDoc.getText(0, birthdayDoc.getLength())));
             card.setName(nameDoc.getText(0, nameDoc.getLength()));
             card.setSurname(surnameDoc.getText(0, surnameDoc.getLength()));
             card.setContactPhone1(contactPhoneDoc.getText(0, contactPhoneDoc.getLength()));
@@ -128,7 +129,7 @@ public class MedicalCardModel {
             card.setEmail(emailDoc.getText(0, emailDoc.getLength()));
             card.setMainDiagnosis(diagnosisDoc.getText(0, diagnosisDoc.getLength()));
             card.setRelatedDiagnosis(relatedDiagnosisDoc.getText(0, relatedDiagnosisDoc.getLength()));
-            card.setDateOfNextExamination(UIHelper.parseDate(nextExamDate.getText(0, nextExamDate.getLength())));
+            card.setDateOfNextExamination(UIHelper.parseDate(dateOfNextExamDoc.getText(0, dateOfNextExamDoc.getLength())));
 
             ParentsInfo parentsInfo = card.getParentsInfo();
             parentsInfo.setMotherName(motherNameDoc.getText(0, motherNameDoc.getLength()));
@@ -141,4 +142,11 @@ public class MedicalCardModel {
         return card;
     }
 
+    public void setBirthdayDoc(Document birthdayDoc) {
+        this.birthdayDoc = birthdayDoc;
+    }
+
+    public void setDateOfNextExamDoc(Document dateOfNextExamDoc) {
+        this.dateOfNextExamDoc = dateOfNextExamDoc;
+    }
 }

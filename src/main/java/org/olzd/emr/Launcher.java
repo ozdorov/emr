@@ -51,7 +51,7 @@ public class Launcher {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
-
+            LOGGER.error("error while setting look and feel", e);
         }
     }
 
@@ -85,7 +85,7 @@ public class Launcher {
         popupMenu.add(exitItem);
 
         SystemTray tray = SystemTray.getSystemTray();
-        URL bufferedImage = ClassLoader.getSystemResource("hospital16.png");
+        URL bufferedImage = ClassLoader.getSystemResource("hospital16_2.png");
         ImageIcon icon = new ImageIcon(bufferedImage);
 
         TrayIcon trayIcon = new TrayIcon(icon.getImage());

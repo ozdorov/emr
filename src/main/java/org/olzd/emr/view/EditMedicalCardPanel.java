@@ -25,9 +25,9 @@ public class EditMedicalCardPanel extends JPanel {
     private CCPTextField phoneNumber = new CCPTextField(16);
     private CCPTextField phoneNumber2 = new CCPTextField(16);
     private CCPTextField email = new CCPTextField(20);
-    private CCPTextArea address = new CCPTextArea(3, 30);
-    private CCPTextArea mainDiagnosis = new CCPTextArea(3, 30);
-    private CCPTextArea relatedDiagnosis = new CCPTextArea(3, 30);
+    private CCPTextArea address = new CCPTextArea(3, 35);
+    private CCPTextArea mainDiagnosis = new CCPTextArea(4, 35);
+    private CCPTextArea relatedDiagnosis = new CCPTextArea(4, 35);
     private CCPTextField motherName = new CCPTextField(16);
     private CCPTextField motherPhone = new CCPTextField(16);
     private CCPTextField fatherName = new CCPTextField(16);
@@ -243,7 +243,8 @@ public class EditMedicalCardPanel extends JPanel {
         setModel(cardModel);
         name.setDocument(cardModel.getNameDoc());
         surname.setDocument(cardModel.getSurnameDoc());
-        birthday.setDocument(cardModel.getBirthdayDoc());
+        birthday.setValue(cardModel.getBirthdayValue());
+        cardModel.setBirthdayDoc(birthday.getDocument());
         phoneNumber.setDocument(cardModel.getContactPhoneDoc());
         phoneNumber2.setDocument(cardModel.getContactPhone2Doc());
         email.setDocument(cardModel.getEmailDoc());
@@ -251,7 +252,8 @@ public class EditMedicalCardPanel extends JPanel {
         middleName.setDocument(cardModel.getMiddleNameDoc());
         mainDiagnosis.setDocument(cardModel.getDiagnosisDoc());
         relatedDiagnosis.setDocument(cardModel.getRelatedDiagnosisDoc());
-        dateOfNextExamination.setDocument(cardModel.getNextExamDate());
+        dateOfNextExamination.setValue(cardModel.getNextExamDate());
+        cardModel.setDateOfNextExamDoc(dateOfNextExamination.getDocument());
 
         motherName.setDocument(cardModel.getMotherNameDoc());
         motherPhone.setDocument(cardModel.getMotherPhoneDoc());
